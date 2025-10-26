@@ -4,6 +4,7 @@ import logo from "../assets/ChatGPT Image Oct 26, 2025, 05_12_47 PM.png";
 
 export const MainBar = () => {
   const { currentUser, isAuthenticated } = useAuth();
+  const pathName = window.location.pathname;
 
   return (
     <div className="bg-blue-950 w-full h-16 flex items-center justify-between px-8">
@@ -26,13 +27,26 @@ export const MainBar = () => {
               />
             </Link>
           </>
-        ) : (
+        ) : pathName !== "/login" && pathName !== "/signup" ? (
+          // ||
+          // pathName !== "/profile" ||
+          // pathName !== "/signup"
           <Link to="/login">
             <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors">
               Login
             </button>
           </Link>
+        ) : (
+          <p></p>
         )}
+
+        <div>
+          <Link to="/about">
+            <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors">
+              About
+            </button>
+          </Link>
+        </div>
       </div>
     </div>
   );
