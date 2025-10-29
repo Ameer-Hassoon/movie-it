@@ -12,7 +12,6 @@ export const MainBar = () => {
         <img src={logo} alt="logo" className="h-27 w-auto mt-5 " />
       </Link>
 
-      {/* Right side */}
       <div className="flex items-center gap-5">
         {isAuthenticated ? (
           <>
@@ -28,11 +27,8 @@ export const MainBar = () => {
             </Link>
           </>
         ) : pathName !== "/login" && pathName !== "/signup" ? (
-          // ||
-          // pathName !== "/profile" ||
-          // pathName !== "/signup"
           <Link to="/login">
-            <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors">
+            <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded hover:cursor-pointer transition-colors">
               Login
             </button>
           </Link>
@@ -42,7 +38,7 @@ export const MainBar = () => {
 
         <div>
           <Link to="/about">
-            <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors">
+            <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded hover:cursor-pointer transition-colors">
               About
             </button>
           </Link>

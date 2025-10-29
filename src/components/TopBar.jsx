@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import fetchMovies from "../tools/fetchMovie";
 import { Link } from "react-router-dom";
+import fetchMovies from "../tools/fetchMovie";
 import { useAuth } from "../context/AuthContext";
-
+import logo from "../assets/ChatGPT Image Oct 26, 2025, 05_12_47 PM.png";
 export const TopBar = ({ onResults }) => {
   const [query, setQuery] = useState("");
   const { currentUser, isAuthenticated } = useAuth();
+
+  const pathName = window.location.pathname;
 
   useEffect(() => {
     const fetchResults = async () => {
@@ -32,9 +34,39 @@ export const TopBar = ({ onResults }) => {
   return (
     <div className="relative">
       <div className="bg-blue-950 w-full h-16">
-        <h1 className="text-3xl font-bold text-white absolute top-4 left-5 ">
-          movie it
-        </h1>
+        <img
+          src={logo}
+          alt="Profile"
+          className="h-27 w-auto mt-5 absolute rounded-full flex -top-8  left-3"
+        />
+
+        {pathName !== "/" ? (
+          <Link to="/">
+            <div className="absolute left-31 h-16 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle  transition-colors">
+              <p>Home</p>
+            </div>
+          </Link>
+        ) : (
+          <Link to="/">
+            <div className="absolute left-31 h-16 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle">
+              <p>Home</p>
+            </div>
+          </Link>
+        )}
+
+        {pathName !== "/trending" ? (
+          <Link to="/trending">
+            <div className="absolute left-50 h-16 top-0 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
+              <p>trending</p>
+            </div>
+          </Link>
+        ) : (
+          <Link to="/trending">
+            <div className="absolute left-50 h-16 top-0 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
+              <p>trending</p>
+            </div>
+          </Link>
+        )}
 
         <div className="w-full flex justify-center items-center h-10">
           <input
@@ -62,7 +94,7 @@ export const TopBar = ({ onResults }) => {
             </>
           ) : (
             <Link to="/login">
-              <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors">
+              <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors hover:cursor-pointer">
                 Login
               </button>
             </Link>

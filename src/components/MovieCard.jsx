@@ -7,7 +7,7 @@ const MovieCard = ({ id, title, rating, image, year }) => {
     <>
       <Link to={`/movie/${id}`}>
         <div>
-          <div className=" bg-sky-950  w-71 h-130  m-7 p-2 rounded-lg border-gray-500 border-5 shadow-lg hover:cursor-pointer hover:scale-105 transition-transform ">
+          <div className=" bg-sky-950  w-71 h-130  m-5 p-2 rounded-lg border-gray-500 border-5 shadow-lg hover:cursor-pointer hover:scale-105 transition-transform ">
             <div>
               <div className="relative">
                 <img

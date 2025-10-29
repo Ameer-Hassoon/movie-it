@@ -20,6 +20,13 @@ const Profile = () => {
           <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
             Profile
           </h1>
+          <div className="h-50 justify-center flex items-center m-5">
+            <img
+              src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
+              alt="Profile"
+              className="h-50 w-50 rounded-full border-2  border-white hover:cursor-pointer "
+            />
+          </div>
 
           <div className="space-y-4">
             <div className="border-b border-gray-200 pb-4">
@@ -38,7 +45,7 @@ const Profile = () => {
 
             <div>
               <button
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors hover:cursor-pointer"
                 onClick={handleLogout}
               >
                 Logout
