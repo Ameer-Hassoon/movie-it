@@ -6,7 +6,8 @@ import LogIn from "./screens/LogIn.jsx";
 import SignUp from "./screens/SingUp.jsx";
 import Profile from "./screens/profile.jsx";
 import Movie from "./screens/Movie.jsx";
-import Trending from "./screens/Trending.jsx";
+import Tv from "./screens/Tv.jsx";
+import TvShow from "./screens/TvShows.jsx";
 
 const App = () => {
   return (
@@ -18,7 +19,8 @@ const App = () => {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/movie/:id" element={<Movie />} />
-          <Route path="/trending" element={<Trending />} />
+          <Route path="/tv" element={<Tv />} />
+          <Route path="/tvShows/:id" element={<TvShow />} />
         </Routes>
       </Router>
     </AuthProvider>

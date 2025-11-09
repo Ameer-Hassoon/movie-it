@@ -2,10 +2,10 @@ import React from "react";
 import starRating from "../tools/rating";
 import { Link } from "react-router-dom";
 
-const MovieCard = ({ id, title, rating, image, year }) => {
+const TvCard = ({ id, title, rating, image, year }) => {
   return (
     <>
-      <Link to={`/movie/${id}`}>
+      <Link to={`/tvShows/${id}`}>
         <div>
           <div className=" bg-sky-950  w-71 h-130  m-5 p-2 rounded-lg border-gray-500 border-5 shadow-lg hover:cursor-pointer hover:scale-102 transition-transform ">
             <div>
@@ -31,4 +31,4 @@ const MovieCard = ({ id, title, rating, image, year }) => {
   );
 };
 
-export default MovieCard;
+export default TvCard;

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import fetchMovies from "../tools/fetchMovie";
+import { MainBar } from "../components/MainBar";
 import starRating from "../tools/rating";
 import { TopBar } from "../components/TopBar";
-import Casting from "../components/Casting";
 
-const Movie = () => {
+const TvShow = () => {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ageRating, setAgeRating] = useState(null);
   const [err, setErr] = useState("");
   const [trailerURL, setTrailerURL] = useState("");
-  const [crew, setCrew] = useState({});
-  const [cast, setCast] = useState([]);
+
   const handelClick = () => {
     window.open(trailerURL, "_black", "noopener,noreferrer");
   };
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -23,20 +23,16 @@ const Movie = () => {
       try {
         setLoading(true);
 
-        const detailsUrl = `https://api.themoviedb.org/3/movie/${id}`;
+        const detailsUrl = `https://api.themoviedb.org/3/tv/${id}`;
         const movieData = await fetchMovies(detailsUrl);
         setMovie(movieData);
 
-        const ratingUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates`;
+        const ratingUrl = `https://api.themoviedb.org/3/tv/${id}/content_ratings`;
         const ratingData = await fetchMovies(ratingUrl);
         const krData = ratingData.results.find((r) => r.iso_3166_1 === "KR");
-        setAgeRating(
-          krData && krData.release_dates.length > 0
-            ? krData.release_dates[0].certification || "N/A"
-            : "no rating"
-        );
+        setAgeRating(krData ? krData.rating : "N/A");
 
-        const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos`;
+        const trailerUrl = `https://api.themoviedb.org/3/tv/${id}/videos`;
         const trailerData = await fetchMovies(trailerUrl);
 
         const trailer = trailerData.results.find(
@@ -46,11 +42,6 @@ const Movie = () => {
         setTrailerURL(
           trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : ""
         );
-
-        const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
-        const data = await fetchMovies(url);
-        setCrew(data.crew || []);
-        setCast(data.cast || []);
       } catch (error) {
         setErr(error);
         console.log(error);
@@ -61,10 +52,10 @@ const Movie = () => {
 
     fetchDetails();
   }, [id]);
-  console.log(crew);
+
   //if loading is succsuful than run the remining code
   if (loading) {
-    return <div>loading movie</div>;
+    return <div>loading show....</div>;
   }
 
   return (
@@ -84,17 +75,17 @@ const Movie = () => {
         >
           watch trailer
         </button>
-        <div className="left-110 w-200 absolute m-15 mt-10 text-white">
-          <h1 className="text-6xl font-bold">{movie.title}</h1>
+        <div className="left-110 w-200 fixed m-15 mt-10 text-white">
+          <h1 className="text-6xl font-bold">{movie.name}</h1>
           <p className="mt-3 mb-3">
             ⭐ {starRating(movie.vote_average)}/5 ({movie.vote_count})
           </p>
 
           <p className="text-1xl text-gray-500">{movie.overview}</p>
           <br />
-          <p className="border-gray-800 pb-3 rounded-3xl w-fit ">
+          <p className="border-gray-800 pb-3 rounded-3xl  w-fit ">
             released on :{" "}
-            {movie.release_date ? movie.release_date.split("-")[0] : "N/A"}
+            {movie.first_air_date ? movie.first_air_date.split("-")[0] : "N/A"}
           </p>
           {ageRating === "no rating" ? (
             <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
@@ -119,21 +110,8 @@ const Movie = () => {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-wrap justify-center items-center pt-200 absolute">
-        {crew.map((mem) => {
-          return (
-            <Casting
-              image={`https://image.tmdb.org/t/p/w185${mem.profile_path}`}
-              name={mem.name}
-              char={mem.character}
-              id={mem.credit_id}
-              job={mem.known_for_department}
-            />
-          );
-        })}
-      </div> */}
     </>
   );
 };
 
-export default Movie;
+export default TvShow;
