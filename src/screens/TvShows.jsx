@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import fetchMovies from "../tools/fetchMovie";
-import { MainBar } from "../components/MainBar";
 import starRating from "../tools/rating";
 import { TopBar } from "../components/TopBar";
+import Casting from "../components/Casting";
 
 const TvShow = () => {
   const [movie, setMovie] = useState(null);
@@ -11,6 +11,8 @@ const TvShow = () => {
   const [ageRating, setAgeRating] = useState(null);
   const [err, setErr] = useState("");
   const [trailerURL, setTrailerURL] = useState("");
+  const [crew, setCrew] = useState([]);
+  const [cast, setCast] = useState([]);
 
   const handelClick = () => {
     window.open(trailerURL, "_black", "noopener,noreferrer");
@@ -42,6 +44,11 @@ const TvShow = () => {
         setTrailerURL(
           trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : ""
         );
+
+        const CrewUrl = `https://api.themoviedb.org/3/tv/${id}/credits`;
+        const crewData = await fetchMovies(CrewUrl);
+        // setCrew(crewData.crew || []);
+        setCast(crewData.cast || []);
       } catch (error) {
         setErr(error);
         console.log(error);
@@ -52,12 +59,16 @@ const TvShow = () => {
 
     fetchDetails();
   }, [id]);
-
+  const combinedArray = [...cast, ...crew];
   //if loading is succsuful than run the remining code
   if (loading) {
     return <div>loading show....</div>;
   }
-
+  console.log(movie.id);
+  const newCombinedArray = combinedArray.filter((i) => i.profile_path > "");
+  const finalArray = newCombinedArray.filter(
+    (user, index, self) => index === self.findIndex((u) => u.id === user.id)
+  );
   return (
     <>
       <TopBar />
@@ -75,7 +86,7 @@ const TvShow = () => {
         >
           watch trailer
         </button>
-        <div className="left-110 w-200 fixed m-15 mt-10 text-white">
+        <div className="left-110 w-200 absolute m-15 mt-10 text-white">
           <h1 className="text-6xl font-bold">{movie.name}</h1>
           <p className="mt-3 mb-3">
             ⭐ {starRating(movie.vote_average)}/5 ({movie.vote_count})
@@ -87,7 +98,7 @@ const TvShow = () => {
             released on :{" "}
             {movie.first_air_date ? movie.first_air_date.split("-")[0] : "N/A"}
           </p>
-          {ageRating === "no rating" ? (
+          {ageRating === "N/A" ? (
             <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
               <p></p>
             </div>
@@ -109,6 +120,20 @@ const TvShow = () => {
             })}
           </div>
         </div>
+      </div>
+      <div className="flex flex-wrap justify-center items-center mt-200 absolute">
+        {finalArray.map((mem) => {
+          return (
+            <Casting
+              key={mem.id}
+              image={`https://image.tmdb.org/t/p/w185${mem.profile_path}`}
+              name={mem.name}
+              char={mem.character}
+              id={mem.id}
+              job={mem.known_for_department}
+            />
+          );
+        })}
       </div>
     </>
   );

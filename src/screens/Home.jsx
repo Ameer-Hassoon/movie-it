@@ -25,7 +25,7 @@ const Home = () => {
       fetchResults();
     }, 0);
   }, [query, setPopularMovies]);
-
+  const finalMovies = popularMovies.filter((n) => n.poster_path > "");
   return (
     <>
       <TopBar />
@@ -43,8 +43,8 @@ const Home = () => {
         <h1 className="text-4xl font-bold mb-6 text-center">Popular Movies</h1>
       </div>
       <div className="flex flex-wrap justify-center items-center">
-        {popularMovies.length > 0 ? (
-          popularMovies.map((movie) => {
+        {finalMovies.length > 0 ? (
+          finalMovies.map((movie) => {
             return (
               <MovieCard
                 id={movie.id}

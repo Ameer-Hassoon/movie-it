@@ -11,8 +11,9 @@ const Movie = () => {
   const [ageRating, setAgeRating] = useState(null);
   const [err, setErr] = useState("");
   const [trailerURL, setTrailerURL] = useState("");
-  const [crew, setCrew] = useState({});
+  const [crew, setCrew] = useState([]);
   const [cast, setCast] = useState([]);
+
   const handelClick = () => {
     window.open(trailerURL, "_black", "noopener,noreferrer");
   };
@@ -33,7 +34,7 @@ const Movie = () => {
         setAgeRating(
           krData && krData.release_dates.length > 0
             ? krData.release_dates[0].certification || "N/A"
-            : "no rating"
+            : "N/A"
         );
 
         const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos`;
@@ -47,9 +48,9 @@ const Movie = () => {
           trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : ""
         );
 
-        const url = `https://api.themoviedb.org/3/movie/${id}/credits`;
-        const data = await fetchMovies(url);
-        setCrew(data.crew || []);
+        const crewUrl = `https://api.themoviedb.org/3/movie/${id}/credits`;
+        const data = await fetchMovies(crewUrl);
+        // setCrew(data.crew || []);
         setCast(data.cast || []);
       } catch (error) {
         setErr(error);
@@ -61,12 +62,18 @@ const Movie = () => {
 
     fetchDetails();
   }, [id]);
-  console.log(crew);
+  const combinedArray = [...crew, ...cast];
+  // delete the elements that don't have a poster
+  const newCombinedArray = combinedArray.filter((n) => n.profile_path > "");
+  // delete the duplicated elements
+  const finalArray = newCombinedArray.filter(
+    (user, index, self) => index === self.findIndex((u) => u.id === user.id)
+  );
   //if loading is succsuful than run the remining code
   if (loading) {
     return <div>loading movie</div>;
   }
-
+  console.log(movie.id);
   return (
     <>
       <TopBar />
@@ -96,7 +103,7 @@ const Movie = () => {
             released on :{" "}
             {movie.release_date ? movie.release_date.split("-")[0] : "N/A"}
           </p>
-          {ageRating === "no rating" ? (
+          {ageRating === "N/A" ? (
             <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
               <p></p>
             </div>
@@ -119,19 +126,29 @@ const Movie = () => {
           </div>
         </div>
       </div>
-      {/* <div className="flex flex-wrap justify-center items-center pt-200 absolute">
-        {crew.map((mem) => {
+      <div className="flex flex-wrap justify-center items-center mt-200 absolute">
+        {finalArray.map((mem) => {
           return (
             <Casting
-              image={`https://image.tmdb.org/t/p/w185${mem.profile_path}`}
+              key={mem.id}
+              image={`https://image.tmdb.org/t/p/w200${mem.profile_path}`}
               name={mem.name}
               char={mem.character}
-              id={mem.credit_id}
-              job={mem.known_for_department}
+              id={mem.id}
+              // job={mem.known_for_department}
             />
           );
         })}
-      </div> */}
+      </div>
+      {/* <iframe
+        className="absolute right-3 mt-10"
+        src={`https://vidsrc.to/embed/movie/${movie.id}`}
+        width="640"
+        height="360"
+        frameBorder="0"
+        allow="autoplay; fullscreen"
+        allowFullScreen
+      /> */}
     </>
   );
 };

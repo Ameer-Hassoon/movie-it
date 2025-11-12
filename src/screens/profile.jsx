@@ -2,6 +2,7 @@ import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { MainBar } from "../components/MainBar";
+import { TopBar } from "../components/TopBar";
 
 const Profile = () => {
   const { currentUser, logout } = useAuth();
@@ -14,7 +15,7 @@ const Profile = () => {
 
   return (
     <>
-      <MainBar />
+      <TopBar />
       <div className="min-h-screen py-12">
         <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md border border-gray-200">
           <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
@@ -24,7 +25,7 @@ const Profile = () => {
             <img
               src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
               alt="Profile"
-              className="h-50 w-50 rounded-full border-2  border-white hover:cursor-pointer "
+              className="h-50 w-50 rounded-full border-2  border-white "
             />
           </div>
 

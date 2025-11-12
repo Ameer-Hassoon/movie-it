@@ -26,6 +26,7 @@ const Tv = () => {
     }, 0);
   }, [query, setTrendingMovies]);
 
+  const finalTrendingMovies = trendingMovies.filter((n) => n.poster_path > "");
   return (
     <>
       <TopBar />
@@ -42,8 +43,8 @@ const Tv = () => {
         <h1 className="text-4xl font-bold mb-6 text-center">TV Shows</h1>
       </div>
       <div className="flex flex-wrap justify-center items-center">
-        {trendingMovies.length > 0 ? (
-          trendingMovies.map((movie) => {
+        {finalTrendingMovies.length > 0 ? (
+          finalTrendingMovies.map((movie) => {
             return (
               <TvCard
                 id={movie.id}
@@ -60,7 +61,7 @@ const Tv = () => {
             );
           })
         ) : (
-          <p>No movies found</p>
+          <p>No shows found</p>
         )}
       </div>
     </>

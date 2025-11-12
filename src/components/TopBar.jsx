@@ -44,6 +44,19 @@ export const TopBar = () => {
             </div>
           </Link>
         )}
+        {pathName !== "/people" ? (
+          <Link to="/people">
+            <div className="absolute left-69 h-16 top-0 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
+              <p>People</p>
+            </div>
+          </Link>
+        ) : (
+          <Link to="/people">
+            <div className="absolute left-69 h-16 top-0 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
+              <p>People</p>
+            </div>
+          </Link>
+        )}
 
         <div className="absolute top-3 right-8 flex items-center gap-4">
           {isAuthenticated ? (

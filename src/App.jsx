@@ -8,6 +8,9 @@ import Profile from "./screens/profile.jsx";
 import Movie from "./screens/Movie.jsx";
 import Tv from "./screens/Tv.jsx";
 import TvShow from "./screens/TvShows.jsx";
+import Person from "./screens/Person.jsx";
+import People from "./screens/People.jsx";
+import Test from "./screens/Test.jsx";
 
 const App = () => {
   return (
@@ -21,6 +24,9 @@ const App = () => {
           <Route path="/movie/:id" element={<Movie />} />
           <Route path="/tv" element={<Tv />} />
           <Route path="/tvShows/:id" element={<TvShow />} />
+          <Route path="/person/:id" element={<Person />} />
+          <Route path="people" element={<People />} />
+          <Route path="/video" element={<Test />} />
         </Routes>
       </Router>
     </AuthProvider>
