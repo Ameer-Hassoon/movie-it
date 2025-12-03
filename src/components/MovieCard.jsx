@@ -1,8 +1,10 @@
 import React from "react";
-import starRating from "../tools/rating";
+// import starRating from "../tools/rating";
 import { Link } from "react-router-dom";
+import { Tools } from "../tools/utils";
 
 const MovieCard = ({ id, title, rating, image, year }) => {
+  const tools = new Tools();
   return (
     <>
       <Link to={`/movie/${id}`}>
@@ -20,7 +22,7 @@ const MovieCard = ({ id, title, rating, image, year }) => {
                 <h1 className=" font-bold text-grey-50 line-clamp-1 wrap-break-word w-65 mt-5 ">
                   {title}
                 </h1>
-                <p className="mt-2">{starRating(rating)}/5 ⭐</p>
+                <p className="mt-2">{tools.starRating(rating)}</p>
                 <p className="mt-1">{year}</p>
               </div>
             </div>

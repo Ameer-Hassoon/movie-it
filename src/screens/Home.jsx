@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import { TopBar } from "../components/TopBar";
-import fetchMovies from "../tools/fetchMovie";
+import { Tools } from "../tools/utils.js";
 
 const Home = () => {
-  const [popularMovies, setPopularMovies] = useState([]);
+  const [Movies, setMovies] = useState([]);
   const [query, setQuery] = useState("");
+  const [err, setErr] = useState("");
+
+  const tools = new Tools("movies");
 
   useEffect(() => {
-    const fetchResults = async () => {
-      if (query.trim() === "") {
-        const url = "https://api.themoviedb.org/3/movie/popular";
-        const data = await fetchMovies(url);
-        setPopularMovies(data.results || []);
-      } else {
-        const url = `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(
-          query
-        )}`;
-        const data = await fetchMovies(url);
-        setPopularMovies(data.results || []);
-      }
-    };
-    setTimeout(() => {
-      fetchResults();
-    }, 0);
-  }, [query, setPopularMovies]);
-  const finalMovies = popularMovies.filter((n) => n.poster_path > "");
+    try {
+      const fetchResults = async () => {
+        const data = await tools.fetchSearch(query);
+        setMovies(data);
+      };
+
+      setTimeout(() => {
+        fetchResults();
+      }, 0);
+    } catch (error) {
+      setErr(error);
+      console.log(err);
+    }
+  }, [query]);
+  const finalMovies = Movies.filter((n) => n.poster_path > "");
   return (
     <>
       <TopBar />
@@ -40,7 +40,7 @@ const Home = () => {
         />
       </div>
       <div className="mt-15">
-        <h1 className="text-4xl font-bold mb-6 text-center">Popular Movies</h1>
+        <h1 className="text-4xl font-bold mb-6 text-center">Movies</h1>
       </div>
       <div className="flex flex-wrap justify-center items-center">
         {finalMovies.length > 0 ? (

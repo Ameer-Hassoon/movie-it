@@ -5,12 +5,11 @@ import Home from "./screens/Home.jsx";
 import LogIn from "./screens/LogIn.jsx";
 import SignUp from "./screens/SingUp.jsx";
 import Profile from "./screens/profile.jsx";
-import Movie from "./screens/Movie.jsx";
-import Tv from "./screens/Tv.jsx";
-import TvShow from "./screens/TvShows.jsx";
-import Person from "./screens/Person.jsx";
+import MovieDetails from "./screens/MovieDetails.jsx";
+import TvShows from "./screens/TvShows.jsx";
+import TvDetails from "./screens/TvDetails.jsx";
 import People from "./screens/People.jsx";
-import Test from "./screens/Test.jsx";
+import PersonDetails from "./screens/PersonDetails.jsx";
 
 const App = () => {
   return (
@@ -21,12 +20,11 @@ const App = () => {
           <Route path="/login" element={<LogIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/movie/:id" element={<Movie />} />
-          <Route path="/tv" element={<Tv />} />
-          <Route path="/tvShows/:id" element={<TvShow />} />
-          <Route path="/person/:id" element={<Person />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
+          <Route path="/tv" element={<TvShows />} />
+          <Route path="/tvShows/:id" element={<TvDetails />} />
+          <Route path="/person/:id" element={<PersonDetails />} />
           <Route path="people" element={<People />} />
-          <Route path="/video" element={<Test />} />
         </Routes>
       </Router>
     </AuthProvider>

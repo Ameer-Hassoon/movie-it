@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
-import { MainBar } from "../components/MainBar.jsx";
+import { TopBar } from "../components/TopBar.jsx";
 
 const LogIn = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ const LogIn = () => {
 
   return (
     <>
-      <MainBar />
+      <TopBar />
       <div className="max-w-md mx-auto p-8 bg-white rounded-lg shadow-md mt-20 border border-gray-200">
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
           Log In

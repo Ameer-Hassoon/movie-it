@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/ChatGPT Image Oct 26, 2025, 05_12_47 PM.png";
 
 export const TopBar = () => {
-  const { currentUser, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   const pathName = window.location.pathname;
 
@@ -20,13 +20,13 @@ export const TopBar = () => {
         {pathName !== "/" ? (
           <Link to="/">
             <div className="absolute left-31 h-16 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle  transition-colors">
-              <p>Home</p>
+              <p>Movies</p>
             </div>
           </Link>
         ) : (
           <Link to="/">
             <div className="absolute left-31 h-16 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle">
-              <p>Home</p>
+              <p>Movies</p>
             </div>
           </Link>
         )}
@@ -34,13 +34,13 @@ export const TopBar = () => {
         {pathName !== "/Tv" ? (
           <Link to="/Tv">
             <div className="absolute left-50 h-16 top-0 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
-              <p>TVs</p>
+              <p>Shows</p>
             </div>
           </Link>
         ) : (
           <Link to="/Tv">
             <div className="absolute left-50 h-16 top-0 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
-              <p>TVs</p>
+              <p>Shows</p>
             </div>
           </Link>
         )}

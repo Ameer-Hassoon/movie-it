@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import fetchMovies from "../tools/fetchMovie";
-import starRating from "../tools/rating";
 import { TopBar } from "../components/TopBar";
 import Casting from "../components/Casting";
+import { Tools } from "../tools/utils";
 
-const Movie = () => {
+const MovieDetails = () => {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ageRating, setAgeRating] = useState(null);
   const [err, setErr] = useState("");
   const [trailerURL, setTrailerURL] = useState("");
-  const [crew, setCrew] = useState([]);
+  // const [crew, setCrew] = useState([]);
   const [cast, setCast] = useState([]);
+
+  const tools = new Tools("movies");
 
   const handelClick = () => {
     window.open(trailerURL, "_black", "noopener,noreferrer");
@@ -25,11 +26,11 @@ const Movie = () => {
         setLoading(true);
 
         const detailsUrl = `https://api.themoviedb.org/3/movie/${id}`;
-        const movieData = await fetchMovies(detailsUrl);
+        const movieData = await tools.fetchMovies(detailsUrl);
         setMovie(movieData);
 
         const ratingUrl = `https://api.themoviedb.org/3/movie/${id}/release_dates`;
-        const ratingData = await fetchMovies(ratingUrl);
+        const ratingData = await tools.fetchMovies(ratingUrl);
         const krData = ratingData.results.find((r) => r.iso_3166_1 === "KR");
         setAgeRating(
           krData && krData.release_dates.length > 0
@@ -38,8 +39,7 @@ const Movie = () => {
         );
 
         const trailerUrl = `https://api.themoviedb.org/3/movie/${id}/videos`;
-        const trailerData = await fetchMovies(trailerUrl);
-
+        const trailerData = await tools.fetchMovies(trailerUrl);
         const trailer = trailerData.results.find(
           (vid) => vid.type === "Trailer" && vid.site === "YouTube"
         );
@@ -49,12 +49,12 @@ const Movie = () => {
         );
 
         const crewUrl = `https://api.themoviedb.org/3/movie/${id}/credits`;
-        const data = await fetchMovies(crewUrl);
+        const data = await tools.fetchMovies(crewUrl);
         // setCrew(data.crew || []);
         setCast(data.cast || []);
       } catch (error) {
         setErr(error);
-        console.log(error);
+        console.log(err);
       } finally {
         setLoading(false);
       }
@@ -62,7 +62,7 @@ const Movie = () => {
 
     fetchDetails();
   }, [id]);
-  const combinedArray = [...crew, ...cast];
+  const combinedArray = [...cast];
   // delete the elements that don't have a poster
   const newCombinedArray = combinedArray.filter((n) => n.profile_path > "");
   // delete the duplicated elements
@@ -73,7 +73,6 @@ const Movie = () => {
   if (loading) {
     return <div>loading movie</div>;
   }
-  console.log(movie.id);
   return (
     <>
       <TopBar />
@@ -94,14 +93,13 @@ const Movie = () => {
         <div className="left-110 w-200 absolute m-15 mt-10 text-white">
           <h1 className="text-6xl font-bold">{movie.title}</h1>
           <p className="mt-3 mb-3">
-            ⭐ {starRating(movie.vote_average)}/5 ({movie.vote_count})
+            {tools.starRating(movie.vote_average)} ({movie.vote_count})
           </p>
 
           <p className="text-1xl text-gray-500">{movie.overview}</p>
           <br />
           <p className="border-gray-800 pb-3 rounded-3xl w-fit ">
-            released on :{" "}
-            {movie.release_date ? movie.release_date.split("-")[0] : "N/A"}
+            released on : {tools.releaseDate(movie)}
           </p>
           {ageRating === "N/A" ? (
             <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
@@ -140,17 +138,8 @@ const Movie = () => {
           );
         })}
       </div>
-      {/* <iframe
-        className="absolute right-3 mt-10"
-        src={`https://vidsrc.to/embed/movie/${movie.id}`}
-        width="640"
-        height="360"
-        frameBorder="0"
-        allow="autoplay; fullscreen"
-        allowFullScreen
-      /> */}
     </>
   );
 };
 
-export default Movie;
+export default MovieDetails;

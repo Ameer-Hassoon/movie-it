@@ -5,13 +5,13 @@ import { useParams } from "react-router-dom";
 import MovieCard from "../components/MovieCard";
 import TvCard from "../components/TvCard";
 
-const Person = () => {
+const PersonDetails = () => {
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState({});
   const [movieCast, setMovieCast] = useState([]);
-  const [movieCrew, setMovieCrew] = useState([]);
-  const [tvCrew, setTvCrew] = useState([]);
+  // const [movieCrew, setMovieCrew] = useState([]);
+  // const [tvCrew, setTvCrew] = useState([]);
   const [tvCast, setTvCast] = useState([]);
 
   const { id } = useParams();
@@ -28,12 +28,12 @@ const Person = () => {
         const worksUrl = `https://api.themoviedb.org/3/person/${id}/movie_credits`;
         const worksData = await fetchMovies(worksUrl);
         setMovieCast(worksData.cast || []);
-        setMovieCrew(worksData.crew || []);
+        // setMovieCrew(worksData.crew || []);
 
         const tvUrl = `https://api.themoviedb.org/3/person/${id}/tv_credits`;
         const tvData = await fetchMovies(tvUrl);
         setTvCast(tvData.cast || []);
-        setTvCrew(tvData.crew || []);
+        // setTvCrew(tvData.crew || []);
       } catch (error) {
         setErr(error);
         console.log(err);
@@ -44,15 +44,15 @@ const Person = () => {
     castDetails();
   }, []);
   //**********************************the movies*******************************
-  const combinedArrayMovie = [...movieCast, ...movieCrew];
+  const combinedArrayMovie = [...movieCast];
   const notValuableArrayMovie = combinedArrayMovie.filter(
     (e) => e.poster_path > ""
   );
   const finalArrayMovie = notValuableArrayMovie.filter(
     (user, index, self) => index === self.findIndex((u) => u.id === user.id)
   );
-  // *********************************the tv shows******************************
-  const combinedArrayTv = [...tvCast, ...tvCrew];
+  // *********************************the shows******************************
+  const combinedArrayTv = [...tvCast];
   const notValuableArrayTv = combinedArrayTv.filter((e) => e.poster_path > "");
   const finalArrayTv = notValuableArrayTv.filter(
     (user, index, self) => index === self.findIndex((u) => u.id === user.id)
@@ -61,13 +61,12 @@ const Person = () => {
   if (loading) {
     return <p>loading details...</p>;
   }
-
   return (
     <>
       <TopBar />
       <div className="mt-15">
         <div className="flex">
-          <div className="m-15 ml-25">
+          <div className="m-15 ml-25 h-128">
             <img
               src={`https://image.tmdb.org/t/p/w400/${details.profile_path}`}
               alt="person"
@@ -90,7 +89,6 @@ const Person = () => {
         <div className="justify-center w-full mt-20 flex">
           <div className="h-[0.5px] bg-amber-50 w-[95%]"></div>
         </div>
-        {/* <div className="">works : </div> */}
         <div className="flex flex-wrap justify-center items-center mt-23">
           {finalArrayMovie.map((work) => (
             <MovieCard
@@ -120,4 +118,4 @@ const Person = () => {
   );
 };
 
-export default Person;
+export default PersonDetails;

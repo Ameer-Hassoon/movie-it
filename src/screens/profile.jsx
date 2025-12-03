@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { MainBar } from "../components/MainBar";
 import { TopBar } from "../components/TopBar";
 
 const Profile = () => {

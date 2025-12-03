@@ -1,27 +1,19 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import fetchMovies from "../tools/fetchMovie";
 import { TopBar } from "../components/TopBar";
 import Casting from "../components/Casting";
+import { Tools } from "../tools/utils";
 
 const People = () => {
   const [err, setErr] = useState("");
-  const [popular, setPopular] = useState([]);
+  const [peopleData, setPeopleData] = useState([]);
   const [query, setQuery] = useState("");
+  const tools = new Tools("people");
   useEffect(() => {
     const people = async () => {
       try {
-        if (query.trim() === "") {
-          const peopleUrl = `https://api.themoviedb.org/3/person/popular`;
-          const peopleData = await fetchMovies(peopleUrl);
-          setPopular(peopleData.results);
-        } else {
-          const personUrl = `https://api.themoviedb.org/3/search/person?query=${encodeURIComponent(
-            query
-          )}`;
-          const personData = await fetchMovies(personUrl);
-          setPopular(personData.results);
-        }
+        const data = await tools.fetchSearch(query);
+        setPeopleData(data);
       } catch (error) {
         setErr(error);
         console.log(err);
@@ -29,7 +21,7 @@ const People = () => {
     };
     people();
   }, [query]);
-  const modifiedArray = popular.filter((e) => e.profile_path > "");
+  const modifiedArray = peopleData.filter((e) => e.profile_path > "");
   return (
     <div>
       <TopBar />
