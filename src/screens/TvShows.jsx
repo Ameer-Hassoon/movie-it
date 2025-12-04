@@ -35,15 +35,13 @@ const TvShows = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="search for a show..."
-          className="p-3 w-120 mt-6 rounded-xl border-2 border-[rgb(120,83,9)] focus:outline-none focus:ring-2 focus:ring-[rgb(173,149,83)] bg-white text-gray-800"
+          className="p-3 w-120 mt-6 rounded-xl border-2 border-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 bg-white text-gray-800"
         />
       </div>
       <div className="mt-15">
-        <h1 className="text-4xl font-bold mb-6 text-center  text-yellow-800">
-          TV Shows
-        </h1>
+        <h1 className="text-4xl font-bold mb-6 text-center">TV Shows</h1>
       </div>
-      <div className="flex flex-wrap  items-center">
+      <div className="flex flex-wrap justify-center items-center">
         {finalTrendingMovies.length > 0 ? (
           finalTrendingMovies.map((movie) => {
             return (

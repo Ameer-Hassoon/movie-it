@@ -116,7 +116,7 @@ const MovieDetails = () => {
               return (
                 <p
                   key={genre.id}
-                  className=" pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-[rgb(120,83,9)] w-fit "
+                  className="border-gray-800 pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-indigo-950 w-fit "
                 >
                   {genre.name}
                 </p>

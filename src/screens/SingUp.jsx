@@ -51,7 +51,7 @@ const LogIn = () => {
               Email
             </label>
             <input
-              className="border border-[rgb(120,83,9)] p-3 w-full rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-[rgb(173,149,83)]"
+              className="border border-gray-300 p-3 w-full rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="email"
               id="email"
               value={email}
@@ -67,7 +67,7 @@ const LogIn = () => {
               Password
             </label>
             <input
-              className="border border-[rgb(120,83,9)] p-3 w-full rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-[rgb(173,149,83)]"
+              className="border border-gray-300 p-3 w-full rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="password"
               id="password"
               value={password}
@@ -83,7 +83,7 @@ const LogIn = () => {
               name
             </label>
             <input
-              className="border border-[rgb(120,83,9)] p-3 w-full rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-[rgb(173,149,83)]"
+              className="border border-gray-300 p-3 w-full rounded-lg  text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
               type="text"
               id="name"
               value={name}
@@ -94,7 +94,7 @@ const LogIn = () => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-yellow-600 text-white py-3 px-6 rounded-lg w-full font-semibold hover:bg-yellow-700 transition-colors hover:cursor-pointer disabled:bg-yellow-400 disabled:cursor-not-allowed"
+            className="bg-blue-600 text-white py-3 px-6 rounded-lg w-full font-semibold hover:bg-blue-700 transition-colors hover:cursor-pointer disabled:bg-blue-400 disabled:cursor-not-allowed"
           >
             {loading ? "Signing up..." : "Sign Up"}
           </button>
@@ -103,7 +103,7 @@ const LogIn = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             have an account?{" "}
-            <span className="text-yellow-600 hover:text-yellow-800 cursor-pointer font-semibold">
+            <span className="text-blue-600 hover:text-blue-800 cursor-pointer font-semibold">
               <Link to="/login">Log in</Link>
             </span>
           </p>

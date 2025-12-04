@@ -74,12 +74,12 @@ const PersonDetails = () => {
             />
           </div>
 
-          <h1 className="text-6xl left-135 top-47 absolute font-bold  text-yellow-800">
+          <h1 className="text-6xl left-135 top-45 absolute font-bold ">
             {" "}
             {details.name}
           </h1>
           {details.biography ? (
-            <p className=" w-[50%] top-65 left-135 absolute text-[1.2rem] h-106 wrap-break-word overflow-clip text-yellow-700">
+            <p className=" w-[50%] top-65 left-135 absolute text-[1.2rem] h-106 wrap-break-word overflow-clip text-gray-400">
               {details.biography}
             </p>
           ) : (
@@ -89,7 +89,7 @@ const PersonDetails = () => {
         <div className="justify-center w-full mt-20 flex">
           <div className="h-[0.5px] bg-amber-50 w-[95%]"></div>
         </div>
-        <div className="flex flex-wrap  items-center mt-23">
+        <div className="flex flex-wrap justify-center items-center mt-23">
           {finalArrayMovie.map((work) => (
             <MovieCard
               id={work.id}
