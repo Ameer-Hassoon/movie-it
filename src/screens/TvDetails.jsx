@@ -111,7 +111,7 @@ const TvDetails = () => {
               return (
                 <p
                   key={genre.id}
-                  className="border-gray-800 pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-indigo-950 w-fit "
+                  className=" pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-[rgb(120,83,9)] w-fit "
                 >
                   {genre.name}
                 </p>
@@ -120,7 +120,7 @@ const TvDetails = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-center items-center mt-200 absolute">
+      <div className="flex flex-wrap  items-center mt-200 absolute">
         {finalArray.map((mem) => {
           return (
             <Casting

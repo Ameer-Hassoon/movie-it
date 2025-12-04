@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Casting = ({ id, name, char, job, image }) => {
   return (
     <Link to={`/person/${id}`}>
-      <div className=" w-50 m-3 h-70 hover:cursor-pointer  ">
+      <div className=" w-50 m-3 h-70 hover:cursor-pointer text-yellow-800 ">
         <div>
           <div className="relative w-50 h-50 overflow-hidden">
             <img
