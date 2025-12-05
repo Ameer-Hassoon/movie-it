@@ -45,7 +45,7 @@ const LogIn = () => {
               Email
             </label>
             <input
-              className="border border-gray-500 p-3 w-full rounded-lg  focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="p-3 w-full rounded-lg border-2 text-gray-800 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white"
               type="email"
               id="email"
               value={email}
@@ -61,7 +61,7 @@ const LogIn = () => {
               Password
             </label>
             <input
-              className="border border-gray-500 p-3 w-full rounded-lg text-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className=" p-3 w-full rounded-lg  border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white"
               type="password"
               id="password"
               value={password}
@@ -72,14 +72,14 @@ const LogIn = () => {
           <button
             type="submit"
             disabled={loading}
-            className="bg-sky-900  py-3 px-6 rounded-lg w-full font-semibold hover:bg-sky-950 transition-colors hover:cursor-pointer disabled:bg-sky-800 disabled:cursor-not-allowed"
+            className="bg-sky-900  py-3 px-6 rounded-lg w-full font-semibold hover:bg-sky-950 transition-colors hover:cursor-pointer disabled:bg-sky-800 disabled:cursor-not-allowed text-white"
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <p className="">
+          <p>
             Don't have an account?{" "}
             <Link to="/signup">
               <span className="text-sky-600 hover:text-sky-800 cursor-pointer font-semibold">

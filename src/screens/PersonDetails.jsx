@@ -90,7 +90,7 @@ const PersonDetails = () => {
           )}
         </div>
         <div className="justify-center w-full mt-20 flex">
-          <div className="h-[0.5px] bg-gray-500 w-[95%]"></div>
+          <div className="h-[0.5px] bg-gray-300 w-[95%]"></div>
         </div>
         <div className="flex flex-wrap justify-center items-center mt-23">
           {finalArrayMovie.map((work) => (

@@ -80,33 +80,33 @@ const MovieDetails = () => {
           <img
             src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
             alt="poster"
-            className="w-120 rounded-[80px] p-10"
+            className="w-120 rounded-[80px] p-15"
           />
         </div>
         <button
-          className="w-100 left-10 h-15 bg-red-800 rounded-4xl relative text-[20px] hover:cursor-pointer top-165 "
+          className="w-90 left-15 h-13 bg-red-800 rounded-4xl relative text-[20px] hover:cursor-pointer top-155 "
           onClick={handelClick}
         >
           watch trailer
         </button>
-        <div className="left-110 w-200 absolute m-15 mt-10 text-white">
-          <h1 className="text-6xl font-bold">{movie.title}</h1>
-          <p className="mt-3 mb-3">
+        <div className="left-110 w-200 absolute m-15 mt-10">
+          <h1 className="text-5xl font-bold">{movie.title}</h1>
+          <p className="mt-5 mb-3">
             {tools.starRating(movie.vote_average)} ({movie.vote_count})
           </p>
 
-          <p className="text-1xl text-gray-500">{movie.overview}</p>
+          <p className="text-1xl ">{movie.overview}</p>
           <br />
-          <p className="border-gray-800 pb-3 rounded-3xl w-fit ">
-            released on : {tools.releaseDate(movie)}
+          <p className=" pb-3 rounded-3xl w-fit text-gray-300">
+            Released on : {tools.releaseDate(movie)}
           </p>
           {ageRating === "N/A" ? (
-            <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
+            <div className="  pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
               <p></p>
             </div>
           ) : (
-            <div className="bg-[rgb(24,24,24,1)] text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
-              <p>Age : {ageRating}</p>
+            <div className="bg-[rgb(24,24,24,1)]  pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
+              <p>Age : {ageRating.toLowerCase()}</p>
             </div>
           )}
           <div className="flex gap-4 flex-wrap w-full mt-5">
@@ -123,7 +123,7 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap mt-190 items-center justify-center w-full">
+      <div className="flex flex-wrap mt-180 items-center justify-center w-full">
         {finalArray.map((mem) => {
           return (
             <Casting
