@@ -36,8 +36,10 @@ const People = () => {
           className="p-3 w-120 mt-6 rounded-xl border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white text-gray-800"
         />
       </div>
-
-      <div className="flex flex-wrap justify-center mt-15">
+      <div className="mt-15">
+        <h1 className="text-4xl font-bold mb-6 text-center">People</h1>
+      </div>
+      <div className="flex flex-wrap justify-center mt-12">
         {modifiedArray.length > 0 ? (
           modifiedArray.map((person) => {
             return (

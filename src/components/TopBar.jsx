@@ -72,7 +72,7 @@ export const TopBar = () => {
             </>
           ) : (
             <Link to="/login">
-              <button className="text-xl   hover:bg-[rgb(6,58,92)] px-3 py-1 rounded transition-colors hover:cursor-pointer">
+              <button className="text-xl   hover:bg-[rgb(6,58,92)] p-2 px-4 -m-0.5 rounded transition-colors hover:cursor-pointer">
                 Log In
               </button>
             </Link>

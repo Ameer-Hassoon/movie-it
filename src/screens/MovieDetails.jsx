@@ -95,9 +95,9 @@ const MovieDetails = () => {
             {tools.starRating(movie.vote_average)} ({movie.vote_count})
           </p>
 
-          <p className="text-1xl ">{movie.overview}</p>
+          <p className="text-1xl  text-gray-300">{movie.overview}</p>
           <br />
-          <p className=" pb-3 rounded-3xl w-fit text-gray-300">
+          <p className=" pb-3 rounded-3xl w-fit text-white">
             Released on : {tools.releaseDate(movie)}
           </p>
           {ageRating === "N/A" ? (

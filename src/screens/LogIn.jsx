@@ -61,7 +61,7 @@ const LogIn = () => {
               Password
             </label>
             <input
-              className=" p-3 w-full rounded-lg  border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white"
+              className=" p-3 w-full rounded-lg  border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white text-gray-800"
               type="password"
               id="password"
               value={password}

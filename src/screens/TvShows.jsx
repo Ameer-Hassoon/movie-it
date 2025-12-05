@@ -39,7 +39,7 @@ const TvShows = () => {
         />
       </div>
       <div className="mt-15">
-        <h1 className="text-4xl font-bold mb-6 text-center">TV Shows</h1>
+        <h1 className="text-4xl font-bold mb-6 text-center">Shows</h1>
       </div>
       <div className="flex flex-wrap justify-center items-center">
         {finalTrendingShows.length > 0 ? (

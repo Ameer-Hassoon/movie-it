@@ -73,7 +73,7 @@ const PersonDetails = () => {
             <img
               src={`https://image.tmdb.org/t/p/w400/${details.profile_path}`}
               alt="person"
-              className="rounded-[40px] w-86 "
+              className="rounded-[20px] w-86 "
             />
           </div>
 
@@ -82,7 +82,7 @@ const PersonDetails = () => {
             {details.name}
           </h1>
           {details.biography ? (
-            <p className=" w-[50%] top-65 left-135 absolute text-[1.2rem] h-106 wrap-break-word overflow-clip text-gray-400">
+            <p className=" w-[50%] top-65 left-135 absolute text-[1.2rem] h-106 wrap-break-word overflow-clip ">
               {details.biography}
             </p>
           ) : (

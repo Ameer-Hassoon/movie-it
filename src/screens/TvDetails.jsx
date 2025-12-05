@@ -5,7 +5,7 @@ import { TopBar } from "../components/TopBar";
 import Casting from "../components/Casting";
 
 const TvDetails = () => {
-  const tools = new Tools();
+  const tools = new Tools("shows");
   const [tvShowDetails, setTvShowDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ageRating, setAgeRating] = useState(null);
@@ -75,11 +75,11 @@ const TvDetails = () => {
           <img
             src={`https://image.tmdb.org/t/p/w500${tvShowDetails.poster_path}`}
             alt="poster"
-            className="w-120 rounded-[80px] p-10"
+            className="w-120 rounded-[80px] p-15"
           />
         </div>
         <button
-          className="w-100 left-10 h-15 bg-red-800 rounded-4xl relative text-[20px] hover:cursor-pointer top-165 "
+          className="w-90 left-15 h-13 bg-red-800 rounded-4xl relative text-[20px] hover:cursor-pointer top-155 "
           onClick={handelClick}
         >
           watch trailer
@@ -91,13 +91,10 @@ const TvDetails = () => {
             {tvShowDetails.vote_count})
           </p>
 
-          <p className="text-1xl text-gray-500">{tvShowDetails.overview}</p>
+          <p className="text-1xl text-gray-300">{tvShowDetails.overview}</p>
           <br />
           <p className="border-gray-800 pb-3 rounded-3xl  w-fit ">
-            released on :{" "}
-            {tvShowDetails.first_air_date
-              ? tvShowDetails.first_air_date.split("-")[0]
-              : "N/A"}
+            released on : {tools.releaseDate(tvShowDetails)}
           </p>
           {ageRating === "N/A" ? (
             <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
@@ -122,7 +119,7 @@ const TvDetails = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-center items-center mt-190 absolute">
+      <div className="flex flex-wrap justify-center items-center mt-180 absolute">
         {finalArray.map((mem) => {
           return (
             <Casting

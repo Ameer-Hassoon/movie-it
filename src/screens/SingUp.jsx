@@ -46,7 +46,7 @@ const LogIn = () => {
               Email
             </label>
             <input
-              className="p-3 w-full rounded-lg border-2 text-gray-800 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 focus:bg-white"
+              className="p-3 w-full rounded-lg border-2 text-gray-800 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white"
               type="email"
               id="email"
               value={email}
@@ -62,7 +62,7 @@ const LogIn = () => {
               Password
             </label>
             <input
-              className=" p-3 w-full rounded-lg text-gray-600  border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 focus:bg-white"
+              className=" p-3 w-full rounded-lg  border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white text-gray-800"
               type="password"
               id="password"
               value={password}
@@ -75,7 +75,7 @@ const LogIn = () => {
               name
             </label>
             <input
-              className="p-3 w-full rounded-lg border-2 text-gray-800 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 focus:bg-white"
+              className="p-3 w-full rounded-lg border-2 text-gray-800 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white"
               type="text"
               id="name"
               value={name}
