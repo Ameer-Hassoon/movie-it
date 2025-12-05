@@ -35,7 +35,7 @@ const TvShows = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="search for a show..."
-          className="p-3 w-120 mt-6 rounded-xl border-2 border-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 bg-white text-gray-800"
+          className="p-3 w-120 mt-6 rounded-xl border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white text-gray-800"
         />
       </div>
       <div className="mt-15">

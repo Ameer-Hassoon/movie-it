@@ -122,17 +122,17 @@ const TvDetails = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-center items-center mt-200 absolute">
+      <div className="flex flex-wrap justify-center items-center mt-190 absolute">
         {finalArray.map((mem) => {
           return (
             <Casting
-              className="scale-x-75 scale-y-75 -m-3 -ml-1"
+              className="scale-x-75 scale-y-75 -m-3 -ml"
               key={mem.id}
               image={`https://image.tmdb.org/t/p/w185${mem.profile_path}`}
               name={mem.name}
               char={mem.character}
               id={mem.id}
-              job={mem.known_for_department}
+              // job={mem.known_for_department}
             />
           );
         })}

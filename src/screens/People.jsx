@@ -33,7 +33,7 @@ const People = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="search for someone..."
-          className="p-3 w-120 mt-6 rounded-xl border-2 border-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-600 bg-white text-gray-800"
+          className="p-3 w-120 mt-6 rounded-xl border-2 border-sky-800 focus:outline-none focus:ring-1 focus:ring-sky-600 bg-white text-gray-800"
         />
       </div>
 
@@ -42,7 +42,7 @@ const People = () => {
           modifiedArray.map((person) => {
             return (
               <Casting
-                className="m-3"
+                className="ml-3 scale-x-90 scale-y-90"
                 id={person.id}
                 image={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
                 name={person.original_name}
