@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { TopBar } from "../components/TopBar";
-import TvCard from "../components/TvCard";
 import { Tools } from "../tools/utils";
+import Card from "../components/Card";
 
 const TvShows = () => {
+  const tools = new Tools("shows");
   const [shows, setShows] = useState([]);
   const [query, setQuery] = useState("");
   const [err, setErr] = useState("");
@@ -11,7 +12,6 @@ const TvShows = () => {
   useEffect(() => {
     try {
       const fetchResults = async () => {
-        const tools = new Tools("shows");
         const data = await tools.fetchSearch(query);
         setShows(data);
       };
@@ -24,7 +24,7 @@ const TvShows = () => {
     }
   }, [query]);
 
-  const finalTrendingMovies = shows.filter((n) => n.poster_path > "");
+  const finalTrendingShows = shows.filter((n) => n.poster_path > "");
   return (
     <>
       <TopBar />
@@ -42,20 +42,16 @@ const TvShows = () => {
         <h1 className="text-4xl font-bold mb-6 text-center">TV Shows</h1>
       </div>
       <div className="flex flex-wrap justify-center items-center">
-        {finalTrendingMovies.length > 0 ? (
-          finalTrendingMovies.map((movie) => {
+        {finalTrendingShows.length > 0 ? (
+          finalTrendingShows.map((show) => {
             return (
-              <TvCard
-                id={movie.id}
-                key={movie.id}
-                title={movie.name}
-                rating={movie.vote_average}
-                image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                year={
-                  movie.first_air_date
-                    ? movie.first_air_date.split("-")[0]
-                    : "N/A"
-                }
+              <Card
+                id={show.id}
+                key={show.id}
+                title={show.name}
+                rating={show.vote_average}
+                image={`https://image.tmdb.org/t/p/w500${show.poster_path}`}
+                year={tools.releaseDate(show)}
               />
             );
           })

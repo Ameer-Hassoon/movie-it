@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import fetchMovies from "../tools/fetchMovie";
-import starRating from "../tools/rating";
+import { Tools } from "../tools/utils";
 import { TopBar } from "../components/TopBar";
 import Casting from "../components/Casting";
 
 const TvDetails = () => {
-  const [movie, setMovie] = useState(null);
+  const tools = new Tools();
+  const [tvShowDetails, setTvShowDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ageRating, setAgeRating] = useState(null);
   const [err, setErr] = useState("");
   const [trailerURL, setTrailerURL] = useState("");
   // const [crew, setCrew] = useState([]);
   const [cast, setCast] = useState([]);
-
   const handelClick = () => {
     window.open(trailerURL, "_black", "noopener,noreferrer");
   };
@@ -26,16 +25,16 @@ const TvDetails = () => {
         setLoading(true);
 
         const detailsUrl = `https://api.themoviedb.org/3/tv/${id}`;
-        const movieData = await fetchMovies(detailsUrl);
-        setMovie(movieData);
+        const movieData = await tools.fetchMovies(detailsUrl);
+        setTvShowDetails(movieData);
 
         const ratingUrl = `https://api.themoviedb.org/3/tv/${id}/content_ratings`;
-        const ratingData = await fetchMovies(ratingUrl);
+        const ratingData = await tools.fetchMovies(ratingUrl);
         const krData = ratingData.results.find((r) => r.iso_3166_1 === "KR");
         setAgeRating(krData ? krData.rating : "N/A");
 
         const trailerUrl = `https://api.themoviedb.org/3/tv/${id}/videos`;
-        const trailerData = await fetchMovies(trailerUrl);
+        const trailerData = await tools.fetchMovies(trailerUrl);
 
         const trailer = trailerData.results.find(
           (vid) => vid.type === "Trailer" && vid.site === "YouTube"
@@ -45,10 +44,10 @@ const TvDetails = () => {
           trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : ""
         );
 
-        const CrewUrl = `https://api.themoviedb.org/3/tv/${id}/credits`;
-        const crewData = await fetchMovies(CrewUrl);
-        // setCrew(crewData.crew || []);
-        setCast(crewData.cast || []);
+        const creditsUrl = `https://api.themoviedb.org/3/tv/${id}/credits`;
+        const creditsData = await tools.fetchMovies(creditsUrl);
+        // setCrew(creditsData.crew || []);
+        setCast(creditsData.cast || []);
       } catch (error) {
         setErr(error);
         console.log(err);
@@ -74,44 +73,47 @@ const TvDetails = () => {
       <div className="relative">
         <div className="absolute w-fit ">
           <img
-            src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+            src={`https://image.tmdb.org/t/p/w500${tvShowDetails.poster_path}`}
             alt="poster"
             className="w-120 rounded-[80px] p-10"
           />
         </div>
         <button
-          className="w-100 left-10 h-15 bg-red-900 rounded-4xl relative text-[20px] hover:cursor-pointer top-165 "
+          className="w-100 left-10 h-15 bg-red-800 rounded-4xl relative text-[20px] hover:cursor-pointer top-165 "
           onClick={handelClick}
         >
           watch trailer
         </button>
         <div className="left-110 w-200 absolute m-15 mt-10 text-white">
-          <h1 className="text-6xl font-bold">{movie.name}</h1>
+          <h1 className="text-6xl font-bold">{tvShowDetails.name}</h1>
           <p className="mt-3 mb-3">
-            ⭐ {starRating(movie.vote_average)}/5 ({movie.vote_count})
+            {tools.starRating(tvShowDetails.vote_average)} (
+            {tvShowDetails.vote_count})
           </p>
 
-          <p className="text-1xl text-gray-500">{movie.overview}</p>
+          <p className="text-1xl text-gray-500">{tvShowDetails.overview}</p>
           <br />
           <p className="border-gray-800 pb-3 rounded-3xl  w-fit ">
             released on :{" "}
-            {movie.first_air_date ? movie.first_air_date.split("-")[0] : "N/A"}
+            {tvShowDetails.first_air_date
+              ? tvShowDetails.first_air_date.split("-")[0]
+              : "N/A"}
           </p>
           {ageRating === "N/A" ? (
             <div className=" text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
               <p></p>
             </div>
           ) : (
-            <div className="bg-black text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
+            <div className="bg-[rgb(24,24,24,1)] text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
               <p>Age : {ageRating}</p>
             </div>
           )}
           <div className="flex gap-4 flex-wrap w-full mt-5">
-            {movie.genres.map((genre) => {
+            {tvShowDetails.genres.map((genre) => {
               return (
                 <p
                   key={genre.id}
-                  className="border-gray-800 pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-indigo-950 w-fit "
+                  className="border-gray-800 pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-sky-950 w-fit "
                 >
                   {genre.name}
                 </p>
@@ -124,6 +126,7 @@ const TvDetails = () => {
         {finalArray.map((mem) => {
           return (
             <Casting
+              className="scale-x-75 scale-y-75 -m-3 -ml-1"
               key={mem.id}
               image={`https://image.tmdb.org/t/p/w185${mem.profile_path}`}
               name={mem.name}

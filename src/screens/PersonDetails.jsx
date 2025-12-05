@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { TopBar } from "../components/TopBar";
-import fetchMovies from "../tools/fetchMovie";
+// import fetchMovies from "../tools/fetchMovie";
 import { useParams } from "react-router-dom";
-import MovieCard from "../components/MovieCard";
-import TvCard from "../components/TvCard";
+import Card from "../components/Card";
+import { Tools } from "../tools/utils";
 
 const PersonDetails = () => {
+  const tools = new Tools();
+  const movieTools = new Tools("movies");
+  const showTools = new Tools("shows");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(true);
   const [details, setDetails] = useState({});
@@ -22,16 +25,16 @@ const PersonDetails = () => {
         setLoading(true);
 
         const personUrl = `https://api.themoviedb.org/3/person/${id}`;
-        const personData = await fetchMovies(personUrl);
+        const personData = await tools.fetchMovies(personUrl);
         setDetails(personData);
 
         const worksUrl = `https://api.themoviedb.org/3/person/${id}/movie_credits`;
-        const worksData = await fetchMovies(worksUrl);
+        const worksData = await tools.fetchMovies(worksUrl);
         setMovieCast(worksData.cast || []);
         // setMovieCrew(worksData.crew || []);
 
         const tvUrl = `https://api.themoviedb.org/3/person/${id}/tv_credits`;
-        const tvData = await fetchMovies(tvUrl);
+        const tvData = await tools.fetchMovies(tvUrl);
         setTvCast(tvData.cast || []);
         // setTvCrew(tvData.crew || []);
       } catch (error) {
@@ -87,29 +90,28 @@ const PersonDetails = () => {
           )}
         </div>
         <div className="justify-center w-full mt-20 flex">
-          <div className="h-[0.5px] bg-amber-50 w-[95%]"></div>
+          <div className="h-[0.5px] bg-gray-500 w-[95%]"></div>
         </div>
         <div className="flex flex-wrap justify-center items-center mt-23">
           {finalArrayMovie.map((work) => (
-            <MovieCard
+            <Card
               id={work.id}
               key={work.id}
               title={work.title}
               rating={work.vote_average}
               image={`https://image.tmdb.org/t/p/w500${work.poster_path}`}
-              year={work.release_date ? work.release_date.split("-")[0] : "N/A"}
+              year={movieTools.releaseDate(work)}
+              type="movie"
             />
           ))}
           {finalArrayTv.map((work) => (
-            <TvCard
+            <Card
               id={work.id}
               key={work.id}
               title={work.name}
               rating={work.vote_average}
               image={`https://image.tmdb.org/t/p/w500${work.poster_path}`}
-              year={
-                work.first_air_date ? work.first_air_date.split("-")[0] : "N/A"
-              }
+              year={showTools.releaseDate(work)}
             />
           ))}
         </div>

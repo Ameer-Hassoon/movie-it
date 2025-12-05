@@ -5,21 +5,23 @@ import Casting from "../components/Casting";
 import { Tools } from "../tools/utils";
 
 const People = () => {
+  const tools = new Tools("people");
   const [err, setErr] = useState("");
   const [peopleData, setPeopleData] = useState([]);
   const [query, setQuery] = useState("");
-  const tools = new Tools("people");
   useEffect(() => {
-    const people = async () => {
-      try {
+    try {
+      const people = async () => {
         const data = await tools.fetchSearch(query);
         setPeopleData(data);
-      } catch (error) {
-        setErr(error);
-        console.log(err);
-      }
-    };
-    people();
+      };
+      setTimeout(() => {
+        people();
+      }, 500);
+    } catch (error) {
+      setErr(error);
+      console.log(err);
+    }
   }, [query]);
   const modifiedArray = peopleData.filter((e) => e.profile_path > "");
   return (
@@ -40,6 +42,7 @@ const People = () => {
           modifiedArray.map((person) => {
             return (
               <Casting
+                className="m-3"
                 id={person.id}
                 image={`https://image.tmdb.org/t/p/w185${person.profile_path}`}
                 name={person.original_name}

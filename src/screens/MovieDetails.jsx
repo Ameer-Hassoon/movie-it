@@ -5,6 +5,7 @@ import Casting from "../components/Casting";
 import { Tools } from "../tools/utils";
 
 const MovieDetails = () => {
+  const tools = new Tools("movies");
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
   const [ageRating, setAgeRating] = useState(null);
@@ -12,9 +13,6 @@ const MovieDetails = () => {
   const [trailerURL, setTrailerURL] = useState("");
   // const [crew, setCrew] = useState([]);
   const [cast, setCast] = useState([]);
-  const [showMoreCast, setShowMoreCast] = useState(false);
-  console.log(cast);
-  const tools = new Tools("movies");
 
   const handelClick = () => {
     window.open(trailerURL, "_black", "noopener,noreferrer");
@@ -86,7 +84,7 @@ const MovieDetails = () => {
           />
         </div>
         <button
-          className="w-100 left-10 h-15 bg-red-900 rounded-4xl relative text-[20px] hover:cursor-pointer top-165 "
+          className="w-100 left-10 h-15 bg-red-800 rounded-4xl relative text-[20px] hover:cursor-pointer top-165 "
           onClick={handelClick}
         >
           watch trailer
@@ -107,7 +105,7 @@ const MovieDetails = () => {
               <p></p>
             </div>
           ) : (
-            <div className="bg-black text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
+            <div className="bg-[rgb(24,24,24,1)] text-stone-50 pl-6 pr-6 w-fit pt-2 pb-2 mt-2 rounded-4xl text-1xl top-165 left-10 text-center">
               <p>Age : {ageRating}</p>
             </div>
           )}
@@ -116,7 +114,7 @@ const MovieDetails = () => {
               return (
                 <p
                   key={genre.id}
-                  className="border-gray-800 pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-indigo-950 w-fit "
+                  className="border-gray-800 pl-5 pr-5 pt-2 pb-2 rounded-3xl bg-sky-950 w-fit "
                 >
                   {genre.name}
                 </p>
@@ -125,10 +123,11 @@ const MovieDetails = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap items-center mt-200 absolute">
-        {(showMoreCast ? finalArray : finalArray.slice(0, 6)).map((mem) => {
+      <div className="flex flex-wrap mt-200 items-center justify-center w-full">
+        {finalArray.map((mem) => {
           return (
             <Casting
+              className="scale-x-75 scale-y-75 -m-3 -ml-1"
               key={mem.id}
               image={`https://image.tmdb.org/t/p/w200${mem.profile_path}`}
               name={mem.name}
@@ -138,12 +137,6 @@ const MovieDetails = () => {
             />
           );
         })}
-        <button
-          className="bg-white p-4 rounded shadow text-blue-950 hover:bg-gray-200"
-          onClick={() => setShowMoreCast((p) => !p)}
-        >
-          {showMoreCast ? "Show less" : "Show more..."}
-        </button>
       </div>
     </>
   );

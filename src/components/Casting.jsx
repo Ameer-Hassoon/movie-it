@@ -1,10 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const Casting = ({ id, name, char, job, image }) => {
+const Casting = ({ id, name, char, job, image, className }) => {
   return (
-    <Link to={`/person/${id}`}>
-      <div className=" w-50 m-3 h-70 hover:cursor-pointer  ">
+    <Link to={`/person/${id}`} className={className}>
+      <div className=" w-50  h-70 hover:cursor-pointer  ">
         <div>
           <div className="relative w-50 h-50 overflow-hidden">
             <img

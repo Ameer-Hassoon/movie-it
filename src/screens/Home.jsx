@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import MovieCard from "../components/MovieCard";
+import Card from "../components/Card.jsx";
 import { TopBar } from "../components/TopBar";
 import { Tools } from "../tools/utils.js";
 
@@ -19,7 +19,7 @@ const Home = () => {
 
       setTimeout(() => {
         fetchResults();
-      }, 0);
+      }, 500);
     } catch (error) {
       setErr(error);
       console.log(err);
@@ -46,15 +46,14 @@ const Home = () => {
         {finalMovies.length > 0 ? (
           finalMovies.map((movie) => {
             return (
-              <MovieCard
+              <Card
                 id={movie.id}
                 key={movie.id}
                 title={movie.title}
                 rating={movie.vote_average}
                 image={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                year={
-                  movie.release_date ? movie.release_date.split("-")[0] : "N/A"
-                }
+                year={tools.releaseDate(movie)}
+                type="movie"
               />
             );
           })

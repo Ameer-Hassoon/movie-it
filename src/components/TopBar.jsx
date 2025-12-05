@@ -10,7 +10,7 @@ export const TopBar = () => {
 
   return (
     <div className="relative">
-      <div className="bg-blue-950 w-full h-16">
+      <div className="bg-sky-950 w-full h-16">
         <img
           src={logo}
           alt="Profile"
@@ -19,13 +19,13 @@ export const TopBar = () => {
 
         {pathName !== "/" ? (
           <Link to="/">
-            <div className="absolute left-31 h-16 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle  transition-colors">
+            <div className="absolute left-31 h-16 hover:bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle  transition-colors">
               <p>Movies</p>
             </div>
           </Link>
         ) : (
           <Link to="/">
-            <div className="absolute left-31 h-16 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle">
+            <div className="absolute left-31 h-16 bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle">
               <p>Movies</p>
             </div>
           </Link>
@@ -33,26 +33,26 @@ export const TopBar = () => {
 
         {pathName !== "/Tv" ? (
           <Link to="/Tv">
-            <div className="absolute left-50 h-16 top-0 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
+            <div className="absolute left-50 h-16 top-0 hover:bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
               <p>Shows</p>
             </div>
           </Link>
         ) : (
           <Link to="/Tv">
-            <div className="absolute left-50 h-16 top-0 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
+            <div className="absolute left-50 h-16 top-0 bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
               <p>Shows</p>
             </div>
           </Link>
         )}
         {pathName !== "/people" ? (
           <Link to="/people">
-            <div className="absolute left-69 h-16 top-0 hover:bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
+            <div className="absolute left-69 h-16 top-0 hover:bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
               <p>People</p>
             </div>
           </Link>
         ) : (
           <Link to="/people">
-            <div className="absolute left-69 h-16 top-0 bg-blue-900 hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
+            <div className="absolute left-69 h-16 top-0 bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
               <p>People</p>
             </div>
           </Link>
@@ -72,7 +72,7 @@ export const TopBar = () => {
             </>
           ) : (
             <Link to="/login">
-              <button className="text-xl text-gray-300 hover:text-white hover:bg-blue-900 px-3 py-1 rounded transition-colors hover:cursor-pointer">
+              <button className="text-xl text-gray-300 hover:text-white hover:bg-[rgb(6,58,92)] px-3 py-1 rounded transition-colors hover:cursor-pointer">
                 Login
               </button>
             </Link>

@@ -1,13 +1,14 @@
 import React from "react";
-import starRating from "../tools/rating";
 import { Link } from "react-router-dom";
+import { Tools } from "../tools/utils";
 
-const TvCard = ({ id, title, rating, image, year }) => {
+const Card = ({ id, title, rating, image, year, type }) => {
+  const tools = new Tools();
   return (
     <>
-      <Link to={`/tvShows/${id}`}>
+      <Link to={type == "movie" ? `/movie/${id}` : `/tvShows/${id}`}>
         <div>
-          <div className=" bg-sky-950  w-68 h-130  m-5 rounded-lg  shadow-lg hover:cursor-pointer hover:scale-102 transition-transform ">
+          <div className=" bg-sky-950  w-68 h-130  m-5  rounded-lg  shadow-lg hover:cursor-pointer hover:scale-102 transition-transform ">
             <div>
               <div className="relative">
                 <img
@@ -20,7 +21,7 @@ const TvCard = ({ id, title, rating, image, year }) => {
                 <h1 className=" font-bold text-grey-50 line-clamp-1 wrap-break-word w-65 mt-5 ">
                   {title}
                 </h1>
-                <p className="mt-2">{starRating(rating)}/5 ⭐</p>
+                <p className="mt-2">{tools.starRating(rating)}</p>
                 <p className="mt-1">{year}</p>
               </div>
             </div>
@@ -31,4 +32,4 @@ const TvCard = ({ id, title, rating, image, year }) => {
   );
 };
 
-export default TvCard;
+export default Card;
