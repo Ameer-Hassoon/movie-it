@@ -20,9 +20,7 @@ export class Tools {
       console.error("Error fetching movies:", error);
     }
   }
-  starRating(num) {
-    return `⭐ ${(num / 2).toFixed(1)}/5 `;
-  }
+
   async fetchSearch(query) {
     switch (this.type) {
       case "movies":
@@ -63,6 +61,9 @@ export class Tools {
           return data.results || [];
         }
     }
+  }
+  starRating(num) {
+    return `⭐ ${(num / 2).toFixed(1)}/5 `;
   }
   releaseDate(data) {
     if (this.type === "movies") {
