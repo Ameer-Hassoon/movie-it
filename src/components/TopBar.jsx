@@ -1,84 +1,67 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import logo from "../assets/ChatGPT Image Oct 26, 2025, 05_12_47 PM.png";
+import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
+import Logo from "./Logo";
+import Avatar from "./Avatar";
+
+const links = [
+  { to: "/", label: "Movies", end: true },
+  { to: "/tv", label: "Shows" },
+  { to: "/people", label: "People" },
+];
+
+const navClass = ({ isActive }) =>
+  [
+    "relative flex h-full items-center px-3 text-[0.95rem] font-medium transition-colors",
+    "after:absolute after:inset-x-3 after:bottom-0 after:h-0.5 after:rounded-full after:transition-colors",
+    isActive
+      ? "text-paper after:bg-bulb"
+      : "text-muted hover:text-paper after:bg-transparent",
+  ].join(" ");
 
 export const TopBar = () => {
-  const { isAuthenticated } = useAuth();
-
-  const pathName = window.location.pathname;
+  const { isAuthenticated, currentUser } = useAuth();
 
   return (
-    <div className="relative">
-      <div className="bg-sky-950 w-full h-16">
-        <img
-          src={logo}
-          alt="Profile"
-          className="h-27 w-auto mt-5 absolute rounded-full flex -top-8  left-0"
-        />
+    <header className="sticky top-0 z-30 border-b border-line bg-ink/90 backdrop-blur-md">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:rounded focus:bg-bulb focus:px-3 focus:py-1.5 focus:text-night"
+      >
+        Skip to content
+      </a>
+      <div className="mx-auto flex h-16 max-w-7xl items-stretch gap-2 px-4 sm:gap-6 sm:px-6">
+        <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label="Movie It home">
+          <Logo className="size-8" />
+          <span className="hidden font-display text-2xl font-extrabold tracking-wide sm:block">
+            Movie It
+          </span>
+        </Link>
 
-        {pathName !== "/" ? (
-          <Link to="/">
-            <div className="absolute left-31 h-16 hover:bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle  transition-colors">
-              <p>Movies</p>
-            </div>
-          </Link>
-        ) : (
-          <Link to="/">
-            <div className="absolute left-31 h-16 bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle">
-              <p>Movies</p>
-            </div>
-          </Link>
-        )}
+        <nav aria-label="Main" className="flex items-stretch">
+          {links.map((link) => (
+            <NavLink key={link.to} to={link.to} end={link.end} className={navClass}>
+              {link.label}
+            </NavLink>
+          ))}
+        </nav>
 
-        {pathName !== "/Tv" ? (
-          <Link to="/Tv">
-            <div className="absolute left-50 h-16 top-0 hover:bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
-              <p>Shows</p>
-            </div>
-          </Link>
-        ) : (
-          <Link to="/Tv">
-            <div className="absolute left-50 h-16 top-0 bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
-              <p>Shows</p>
-            </div>
-          </Link>
-        )}
-        {pathName !== "/people" ? (
-          <Link to="/people">
-            <div className="absolute left-69 h-16 top-0 hover:bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle transition-colors">
-              <p>People</p>
-            </div>
-          </Link>
-        ) : (
-          <Link to="/people">
-            <div className="absolute left-69 h-16 top-0 bg-[rgb(6,58,92)] hover:cursor-pointer justify-center items-center flex w-18 align-middle ">
-              <p>People</p>
-            </div>
-          </Link>
-        )}
-
-        <div className="absolute top-3 right-8 flex items-center gap-4">
+        <div className="ml-auto flex items-center">
           {isAuthenticated ? (
-            <>
-              <span className="text-white text-lg"></span>
-              <Link to="/profile">
-                <img
-                  src="https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"
-                  alt="Profile"
-                  className="w-10 h-10 rounded-full border-2 border-white hover:cursor-pointer"
-                />
-              </Link>
-            </>
+            <Link to="/profile" aria-label="Your profile" className="rounded-full">
+              <Avatar name={currentUser?.name} className="size-9 text-sm" />
+            </Link>
           ) : (
-            <Link to="/login">
-              <button className="text-xl   hover:bg-[rgb(6,58,92)] p-2 px-4 -m-0.5 rounded transition-colors hover:cursor-pointer">
-                Log In
-              </button>
+            <Link
+              to="/login"
+              className="rounded-md px-3 py-2 text-[0.95rem] font-medium text-paper transition-colors hover:bg-panel"
+            >
+              Log in
             </Link>
           )}
         </div>
       </div>
-    </div>
+    </header>
   );
 };
+
+export default TopBar;

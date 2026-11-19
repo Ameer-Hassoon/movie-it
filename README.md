@@ -1,16 +1,38 @@
-# React + Vite
+# Movie It
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A small React app for browsing movies, TV shows and people using [TMDB](https://www.themoviedb.org/).
 
-Currently, two official plugins are available:
+Stack: React 19, Vite 7, Tailwind CSS 4, React Router 7.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Setup
 
-## React Compiler
+1. Copy the env file and add your TMDB **read access token**
+   (TMDB → Settings → API → "API Read Access Token"):
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+   ```bash
+   cp .env.example .env
+   ```
 
-## Expanding the ESLint configuration
+   Then set `VITE_TMDB_TOKEN` in `.env`.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+2. Install dependencies and start the dev server:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+## Scripts
+
+| Script | Description |
+| --- | --- |
+| `npm run dev` | Start the Vite dev server |
+| `npm run build` | Build for production into `dist/` |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Run ESLint over the project |
+
+## Notes
+
+- `.env` is git-ignored. Never commit your TMDB token.
+- Auth is a demo-only mock: accounts are stored in `localStorage`. Do not
+  reuse it as real authentication.

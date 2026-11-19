@@ -1,5 +1,70 @@
 @import "tailwindcss";
-body {
-  background-color: rgb(22, 34, 45);
-  color: rgb(255, 255, 255);
+
+/*
+ * Movie It tokens.
+ * Night-blue house color (kept from the original brand) + one accent:
+ * "bulb", the tungsten amber of the logo and of a cinema marquee.
+ */
+@theme {
+  --color-night: #0f1922; /* page background, deepest */
+  --color-ink: #16222d; /* raised surfaces: header, panels */
+  --color-panel: #1e2d3a; /* inputs, placeholders, chips */
+  --color-line: #2b3d4c; /* borders, dividers */
+  --color-paper: #efe8dc; /* primary text: warm projector white */
+  --color-muted: #94a3b0; /* secondary text */
+  --color-bulb: #f2b544; /* the one accent */
+  --color-bulb-deep: #d99a22; /* accent pressed / hover */
+  --color-danger: #f07a6a;
+
+  --font-display: "Big Shoulders Display", "Arial Narrow", sans-serif;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: var(--color-night);
+    color: var(--color-paper);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--color-bulb);
+    color: var(--color-night);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-bulb);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+  font-feature-settings: "lnum";
+  letter-spacing: 0.005em;
+}
+
+/* Horizontal rows (cast) scroll without a heavy scrollbar. */
+@utility scroll-row {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

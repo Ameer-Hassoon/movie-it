@@ -1,122 +1,135 @@
-import React, { useEffect, useState } from "react";
-import { TopBar } from "../components/TopBar";
-// import fetchMovies from "../tools/fetchMovie";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Card from "../components/Card";
-import { Tools } from "../tools/utils";
+import { getPerson } from "../api/tmdb.js";
+import { imageUrl, uniqueById } from "../api/tmdbHelpers.js";
+import { useAsync } from "../hooks/useAsync.js";
+import PosterCard from "../components/PosterCard";
+import { ErrorState, SkeletonGrid } from "../components/States";
+import { gridClass } from "../lib/grid.js";
+
+const byPopularity = (list) =>
+  uniqueById(list.filter((w) => w.poster_path)).sort((a, b) => (b.popularity ?? 0) - (a.popularity ?? 0));
+
+function formatDate(d) {
+  return d ? new Date(d).toLocaleDateString("en", { year: "numeric", month: "long", day: "numeric" }) : "";
+}
+
+const Biography = ({ text }) => {
+  const [open, setOpen] = useState(false);
+  if (!text) return <p className="text-muted">TMDB doesn't have a biography for this person yet.</p>;
+  const long = text.length > 600;
+  return (
+    <div>
+      <p className={`whitespace-pre-line text-lg leading-relaxed text-paper/85 ${long && !open ? "line-clamp-6" : ""}`}>
+        {text}
+      </p>
+      {long ? (
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="mt-2 font-medium text-bulb hover:text-bulb-deep"
+        >
+          {open ? "Show less" : "Read full biography"}
+        </button>
+      ) : null}
+    </div>
+  );
+};
 
 const PersonDetails = () => {
-  const tools = new Tools();
-  const movieTools = new Tools("movies");
-  const showTools = new Tools("shows");
-  const [err, setErr] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [details, setDetails] = useState({});
-  const [movieCast, setMovieCast] = useState([]);
-  // const [movieCrew, setMovieCrew] = useState([]);
-  // const [tvCrew, setTvCrew] = useState([]);
-  const [tvCast, setTvCast] = useState([]);
-
   const { id } = useParams();
+  const { data: p, loading, error } = useAsync((signal) => getPerson(id, signal), [id]);
+  const [tab, setTab] = useState("movie");
 
   useEffect(() => {
-    const castDetails = async () => {
-      try {
-        setLoading(true);
+    if (p?.name) document.title = `${p.name} · Movie It`;
+  }, [p?.name]);
 
-        const personUrl = `https://api.themoviedb.org/3/person/${id}`;
-        const personData = await tools.fetchMovies(personUrl);
-        setDetails(personData);
-
-        const worksUrl = `https://api.themoviedb.org/3/person/${id}/movie_credits`;
-        const worksData = await tools.fetchMovies(worksUrl);
-        setMovieCast(worksData.cast || []);
-        // setMovieCrew(worksData.crew || []);
-
-        const tvUrl = `https://api.themoviedb.org/3/person/${id}/tv_credits`;
-        const tvData = await tools.fetchMovies(tvUrl);
-        setTvCast(tvData.cast || []);
-        // setTvCrew(tvData.crew || []);
-      } catch (error) {
-        setErr(error);
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    castDetails();
-  }, []);
-  //**********************************the movies*******************************
-  const combinedArrayMovie = [...movieCast];
-  const notValuableArrayMovie = combinedArrayMovie.filter(
-    (e) => e.poster_path > ""
-  );
-  const finalArrayMovie = notValuableArrayMovie.filter(
-    (user, index, self) => index === self.findIndex((u) => u.id === user.id)
-  );
-  // *********************************the shows******************************
-  const combinedArrayTv = [...tvCast];
-  const notValuableArrayTv = combinedArrayTv.filter((e) => e.poster_path > "");
-  const finalArrayTv = notValuableArrayTv.filter(
-    (user, index, self) => index === self.findIndex((u) => u.id === user.id)
-  );
-  // if sucss load the page
-  if (loading) {
-    return <p>loading details...</p>;
+  if (error) return <ErrorState error={error} onRetry={() => window.location.reload()} />;
+  if (loading || !p) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+        <SkeletonGrid count={6} />
+      </div>
+    );
   }
-  return (
-    <>
-      <TopBar />
-      <div className="mt-15">
-        <div className="flex">
-          <div className="m-15 ml-25 h-128">
-            <img
-              src={`https://image.tmdb.org/t/p/w400/${details.profile_path}`}
-              alt="person"
-              className="rounded-[20px] w-86 "
-            />
-          </div>
 
-          <h1 className="text-6xl left-135 top-45 absolute font-bold ">
-            {" "}
-            {details.name}
+  const movies = byPopularity(p.movie_credits?.cast ?? []);
+  const shows = byPopularity(p.tv_credits?.cast ?? []);
+  const works = tab === "movie" ? movies : shows;
+  const photo = imageUrl(p.profile_path, "h632");
+  const facts = [
+    ["Known for", p.known_for_department],
+    ["Born", [formatDate(p.birthday), p.place_of_birth].filter(Boolean).join(" in ")],
+    ["Died", formatDate(p.deathday)],
+  ].filter(([, v]) => v);
+
+  return (
+    <article className="mx-auto max-w-7xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
+      <div className="grid gap-8 md:grid-cols-[minmax(0,300px)_1fr] md:gap-12">
+        {photo ? (
+          <img
+            src={photo}
+            alt={p.name}
+            className="w-48 rounded-lg ring-1 ring-line sm:w-60 md:w-full"
+          />
+        ) : null}
+        <div className="max-w-[68ch]">
+          <h1 className="font-display text-5xl font-black uppercase leading-[0.88] tracking-tight text-balance sm:text-7xl">
+            {p.name}
           </h1>
-          {details.biography ? (
-            <p className=" w-[50%] top-65 left-135 absolute text-[1.2rem] h-106 wrap-break-word overflow-clip ">
-              {details.biography}
-            </p>
-          ) : (
-            <p></p>
-          )}
-        </div>
-        <div className="justify-center w-full mt-20 flex">
-          <div className="h-[0.5px] bg-gray-300 w-[95%]"></div>
-        </div>
-        <div className="flex flex-wrap justify-center items-center mt-23">
-          {finalArrayMovie.map((work) => (
-            <Card
-              id={work.id}
-              key={work.id}
-              title={work.title}
-              rating={work.vote_average}
-              image={`https://image.tmdb.org/t/p/w500${work.poster_path}`}
-              year={movieTools.releaseDate(work)}
-              type="movie"
-            />
-          ))}
-          {finalArrayTv.map((work) => (
-            <Card
-              id={work.id}
-              key={work.id}
-              title={work.name}
-              rating={work.vote_average}
-              image={`https://image.tmdb.org/t/p/w500${work.poster_path}`}
-              year={showTools.releaseDate(work)}
-            />
-          ))}
+          {facts.length ? (
+            <dl className="mt-6 grid gap-x-8 gap-y-3 sm:grid-cols-2">
+              {facts.map(([label, value]) => (
+                <div key={label}>
+                  <dt className="text-sm text-muted">{label}</dt>
+                  <dd>{value}</dd>
+                </div>
+              ))}
+            </dl>
+          ) : null}
+          <div className="mt-8">
+            <Biography text={p.biography} />
+          </div>
         </div>
       </div>
-    </>
+
+      {movies.length || shows.length ? (
+        <section className="mt-16">
+          <div className="flex flex-wrap items-end justify-between gap-4 border-b border-line">
+            <h2 className="pb-3 font-display text-3xl font-extrabold">Appears in</h2>
+            <div role="tablist" aria-label="Credits" className="flex">
+              {[
+                ["movie", "Movies", movies.length],
+                ["tv", "Shows", shows.length],
+              ].map(([key, label, count]) => (
+                <button
+                  key={key}
+                  role="tab"
+                  type="button"
+                  aria-selected={tab === key}
+                  disabled={!count}
+                  onClick={() => setTab(key)}
+                  className={`-mb-px border-b-2 px-4 pb-3 font-medium transition-colors disabled:opacity-40 ${
+                    tab === key ? "border-bulb text-paper" : "border-transparent text-muted hover:text-paper"
+                  }`}
+                >
+                  {label} <span className="text-muted">{count}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <ul className={`${gridClass} mt-8`} role="tabpanel">
+            {works.map((w) => (
+              <li key={w.id}>
+                <PosterCard item={w} kind={tab} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+    </article>
   );
 };
 
