@@ -1,7 +1,7 @@
 # Movie It
 
 React 19 + Vite 7 + Tailwind 4 + React Router 7 app that browses TMDB movies, TV shows and people.
-Run: `npm run dev` · Check: `npm run lint && npm run build`
+Run: `npm run dev` · Check: `npm run lint && npm test && npm run build`
 
 ## Orchestration (model routing)
 
@@ -22,11 +22,13 @@ Rules:
 6. Opus should volunteer opinions: when it sees a better design or product direction, it says so and proposes it, not just executes.
 
 ## Project conventions
-- TMDB access goes through one API module; the token comes from `import.meta.env.VITE_TMDB_TOKEN` (never hardcode it).
+- TMDB access goes through `src/api/tmdb.js`, which calls the same-origin `/api/tmdb/*` proxy (Vite proxy in dev, `api/tmdb.js` Vercel function in prod). The token is `TMDB_TOKEN` in `.env` / Vercel env and must never reach the browser.
+- Check: `npm run lint && npm test && npm run build` (CI runs the same on GitHub Actions).
 - Tailwind 4 with theme tokens in `src/index.css` (`@theme`). No raw `rgb(...)` colors in classNames.
 
 ## Design system (owned by Opus)
 - Tokens live in `src/index.css` `@theme`: `night` (page bg), `ink` (raised), `panel` (inputs/placeholders), `line`, `paper` (text), `muted`, `bulb` (the single amber accent, from the logo), `danger`.
 - Type: `font-display` = Big Shoulders Display (titles, names, headings); body = Instrument Sans.
 - The details-page hero (backdrop + uppercase display title + billing block) is the one loud element. Keep browse pages, forms and cards quiet.
-- Shared pieces: `BrowsePage`, `PosterCard`, `PersonCard`, `TitleDetails`, `States` (skeleton/error/empty), `SearchField`, `AuthCard`, grid in `src/lib/grid.js`.
+- Shared pieces: `BrowsePage` (search + URL-synced genre/sort filters), `Spotlight` (home lead), `MediaRow`, `PosterCard`, `PersonCard`, `TitleDetails`, `WatchlistButton`, `States` (skeleton/error/empty), `SearchField`, `AuthCard`, grid in `src/lib/grid.js`.
+- README screenshots live in `docs/screenshots/*.webp` — retake them after visible UI changes.

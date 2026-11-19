@@ -1,14 +1,30 @@
 import { useEffect, useState } from "react";
-import { getPopular, searchTmdb } from "../api/tmdb.js";
+import { discover, getPopular, searchTmdb } from "../api/tmdb.js";
 import { uniqueById } from "../api/tmdbHelpers.js";
+
+const DEFAULT_SORT = "popularity.desc";
 
 /**
  * Popular list when `query` is empty, search results otherwise, with
- * "load more" paging. Changing kind/query resets to page 1; stale responses
- * are aborted so they can never overwrite newer results.
+ * "load more" paging.
+ *
+ * When the query is empty and a genre/sort filter is active the results come
+ * from /discover, otherwise from /popular. Search ignores filters (TMDB search
+ * has no genre filter) and people never use discover.
+ *
+ * The reset key is built from primitive values only, so changing kind, query,
+ * genre or sort resets to page 1 and aborts stale requests.
+ *
+ * @param {"movie" | "tv" | "person"} kind
+ * @param {string} query
+ * @param {{ genre?: number | "", sort?: string }} [filters]
  */
-export function usePagedSearch(kind, query) {
-  const key = `${kind}|${query}`;
+export function usePagedSearch(kind, query, filters = {}) {
+  const genre = filters?.genre ?? "";
+  const sort = filters?.sort ?? "";
+  const text = String(query ?? "").trim();
+  const key = `${kind}|${text}|${genre}|${sort}`;
+
   const [page, setPage] = useState(1);
   const [pageKey, setPageKey] = useState(key);
   const [attempt, setAttempt] = useState(0);
@@ -31,9 +47,22 @@ export function usePagedSearch(kind, query) {
     const controller = new AbortController();
     setState((s) => ({ ...s, loading: true, error: null }));
 
-    const request = query
-      ? searchTmdb(kind, query, page, controller.signal)
-      : getPopular(kind, page, controller.signal);
+    const filtered =
+      kind !== "person" &&
+      (genre !== "" || (sort !== "" && sort !== DEFAULT_SORT));
+
+    let request;
+    if (text) {
+      request = searchTmdb(kind, text, page, controller.signal);
+    } else if (filtered) {
+      request = discover(
+        kind,
+        { genre, sort: sort || DEFAULT_SORT, page },
+        controller.signal
+      );
+    } else {
+      request = getPopular(kind, page, controller.signal);
+    }
 
     request
       .then((data) => {
@@ -41,7 +70,9 @@ export function usePagedSearch(kind, query) {
         setState((s) => ({
           key,
           items:
-            page === 1 || s.key !== key ? results : uniqueById([...s.items, ...results]),
+            page === 1 || s.key !== key
+              ? results
+              : uniqueById([...s.items, ...results]),
           total: data?.total_results ?? results.length,
           totalPages: Math.min(data?.total_pages ?? 1, 500), // TMDB caps at 500
           loading: false,
@@ -54,7 +85,7 @@ export function usePagedSearch(kind, query) {
       });
 
     return () => controller.abort();
-  }, [kind, query, page, key, attempt]);
+  }, [kind, text, genre, sort, page, key, attempt]);
 
   const current = state.key === key;
   return {

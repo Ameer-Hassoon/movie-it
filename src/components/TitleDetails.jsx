@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { certification, imageUrl, runtime, trailerKey, uniqueById, year } from "../api/tmdbHelpers.js";
+import MediaRow from "./MediaRow";
 import PersonCard from "./PersonCard";
 import Score from "./Score";
 import TrailerModal from "./TrailerModal";
+import WatchlistButton from "./WatchlistButton";
 
 function billing(kind, t) {
   const crew = t.credits?.crew ?? [];
@@ -79,7 +81,7 @@ const TitleDetails = ({ kind, title: t }) => {
             </h1>
             {t.tagline ? <p className="mt-4 text-lg italic text-paper/80">{t.tagline}</p> : null}
 
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-4">
               {video ? (
                 <button
                   type="button"
@@ -92,7 +94,8 @@ const TitleDetails = ({ kind, title: t }) => {
                   Play trailer
                 </button>
               ) : null}
-              <Score value={t.vote_average} count={t.vote_count} className="text-lg" />
+              <WatchlistButton item={t} kind={kind} />
+              <Score value={t.vote_average} count={t.vote_count} className="ml-1 text-lg" />
             </div>
 
             {t.genres?.length ? (
@@ -130,7 +133,7 @@ const TitleDetails = ({ kind, title: t }) => {
 
       {/* Cast */}
       {cast.length ? (
-        <section className="mx-auto max-w-7xl px-4 pb-20 sm:px-6">
+        <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6">
           <h2 className="font-display text-3xl font-extrabold">Cast</h2>
           <ul className="scroll-row -mx-4 mt-4 flex scroll-px-4 gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6">
             {cast.map((p) => (
@@ -141,6 +144,10 @@ const TitleDetails = ({ kind, title: t }) => {
           </ul>
         </section>
       ) : null}
+
+      <div className="pb-20">
+        <MediaRow title="More like this" items={(t.recommendations?.results ?? []).slice(0, 20)} kind={kind} />
+      </div>
 
       {video ? (
         <TrailerModal videoKey={video} title={name} open={trailerOpen} onClose={() => setTrailerOpen(false)} />
