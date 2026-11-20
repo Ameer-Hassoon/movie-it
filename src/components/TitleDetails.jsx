@@ -1,31 +1,48 @@
 import { useEffect, useState } from "react";
 import { certification, imageUrl, runtime, trailerKey, uniqueById, year } from "../api/tmdbHelpers.js";
+import { languageName, longDate, money } from "../lib/format.js";
+import { pickVideos } from "../lib/media.js";
 import MediaRow from "./MediaRow";
 import PersonCard from "./PersonCard";
+import Reviews from "./Reviews";
 import Score from "./Score";
 import TrailerModal from "./TrailerModal";
+import VideoRow from "./VideoRow";
+import WatchProviders from "./WatchProviders";
 import WatchlistButton from "./WatchlistButton";
 
+const list = (items, n = 3) => (items ?? []).slice(0, n).map((i) => i.name ?? i.english_name).filter(Boolean);
+
+/** Key creative credits, most important first. */
 function billing(kind, t) {
   const crew = t.credits?.crew ?? [];
-  const names = (jobs) =>
+  const names = (jobs, n = 3) =>
     uniqueById(crew.filter((c) => jobs.includes(c.job)))
-      .slice(0, 3)
+      .slice(0, n)
       .map((c) => c.name);
 
   const rows =
     kind === "movie"
       ? [
           ["Directed by", names(["Director"])],
-          ["Written by", names(["Screenplay", "Writer", "Story"])],
+          ["Screenplay", names(["Screenplay", "Writer"])],
+          ["Story", names(["Story", "Novel", "Original Story", "Characters"])],
+          ["Produced by", names(["Producer"])],
+          ["Music", names(["Original Music Composer", "Music"], 2)],
+          ["Cinematography", names(["Director of Photography"], 2)],
+          ["Editing", names(["Editor"], 2)],
         ]
-      : [["Created by", (t.created_by ?? []).slice(0, 3).map((c) => c.name)]];
+      : [
+          ["Created by", list(t.created_by)],
+          ["Executive producers", names(["Executive Producer"])],
+          ["Music", names(["Original Music Composer", "Music", "Main Title Theme Composer"], 2)],
+        ];
 
-  rows.push(["Studio", (t.production_companies ?? []).slice(0, 2).map((c) => c.name)]);
-  return rows.filter(([, list]) => list.length > 0);
+  return rows.filter(([, people]) => people.length > 0);
 }
 
-function facts(kind, t) {
+/** One-line facts under the hero title. */
+function heroFacts(kind, t) {
   const cert = certification(kind, t);
   return [
     year(t),
@@ -38,14 +55,73 @@ function facts(kind, t) {
   ].filter(Boolean);
 }
 
+/** The full "Details" grid. Every row is optional and hidden when TMDB has no data. */
+function detailRows(kind, t) {
+  const original = t.original_title ?? t.original_name;
+  const name = t.title ?? t.name;
+  const common = [
+    ["Original title", original && original !== name ? original : ""],
+    ["Original language", languageName(t.original_language)],
+    ["Spoken languages", (t.spoken_languages ?? []).slice(0, 4).map((l) => l.english_name || l.name).join(", ")],
+    ["Countries", list(t.production_countries, 3).join(", ")],
+    ["Production", list(t.production_companies, 3).join(", ")],
+  ];
+
+  if (kind === "movie") {
+    const multiple = t.budget && t.revenue ? t.revenue / t.budget : 0;
+    return [
+      ["Status", t.status],
+      ["Release date", longDate(t.release_date)],
+      ["Runtime", runtime(t.runtime)],
+      ["Budget", money(t.budget)],
+      [
+        "Box office",
+        t.revenue
+          ? `${money(t.revenue)}${multiple ? ` (${multiple >= 1 ? `${multiple.toFixed(1)}× its budget` : "below its budget"})` : ""}`
+          : "",
+      ],
+      ["Collection", t.belongs_to_collection?.name ?? ""],
+      ...common,
+    ];
+  }
+
+  const next = t.next_episode_to_air;
+  const seasons = t.number_of_seasons;
+  return [
+    ["Status", t.status],
+    ["First aired", longDate(t.first_air_date)],
+    [t.in_production ? "Latest episode" : "Last aired", longDate(t.last_air_date)],
+    ["Next episode", next ? `${longDate(next.air_date)}, S${next.season_number} E${next.episode_number}` : ""],
+    ["Seasons", seasons ? `${seasons} ${seasons === 1 ? "season" : "seasons"}, ${t.number_of_episodes ?? "?"} episodes` : ""],
+    ["Episode length", runtime(t.episode_run_time?.[0])],
+    ["Network", list(t.networks, 3).join(", ")],
+    ["Type", t.type],
+    ...common,
+  ];
+}
+
+function links(kind, t) {
+  const imdb = t.imdb_id ?? t.external_ids?.imdb_id;
+  return [
+    t.homepage ? ["Official site", t.homepage] : null,
+    imdb ? ["IMDb", `https://www.imdb.com/title/${imdb}/`] : null,
+    ["TMDB", `https://www.themoviedb.org/${kind}/${t.id}`],
+  ].filter(Boolean);
+}
+
+const sectionTitle = "font-display text-3xl font-extrabold";
+
 /** The details page for a movie or a show. The backdrop hero is the one loud moment. */
 const TitleDetails = ({ kind, title: t }) => {
-  const [trailerOpen, setTrailerOpen] = useState(false);
+  const [playing, setPlaying] = useState(null); // { key, name } of the video in the modal
   const name = t.title ?? t.name;
   const backdrop = imageUrl(t.backdrop_path, "w1280");
   const poster = imageUrl(t.poster_path, "w500");
-  const video = trailerKey(t.videos);
+  const trailer = trailerKey(t.videos);
   const cast = uniqueById(t.credits?.cast ?? []).slice(0, 20);
+  const crew = billing(kind, t);
+  const details = detailRows(kind, t).filter(([, value]) => value);
+  const keywords = (t.keywords?.keywords ?? t.keywords?.results ?? []).slice(0, 14);
 
   useEffect(() => {
     document.title = `${name} (${year(t)}) · Movie It`;
@@ -72,7 +148,7 @@ const TitleDetails = ({ kind, title: t }) => {
 
           <div className="max-w-3xl">
             <p className="flex flex-wrap gap-x-4 gap-y-1 text-muted">
-              {facts(kind, t).map((f) => (
+              {heroFacts(kind, t).map((f) => (
                 <span key={f}>{f}</span>
               ))}
             </p>
@@ -82,10 +158,10 @@ const TitleDetails = ({ kind, title: t }) => {
             {t.tagline ? <p className="mt-4 text-lg italic text-paper/80">{t.tagline}</p> : null}
 
             <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-4">
-              {video ? (
+              {trailer ? (
                 <button
                   type="button"
-                  onClick={() => setTrailerOpen(true)}
+                  onClick={() => setPlaying({ key: trailer, name: `${name} trailer` })}
                   className="inline-flex items-center gap-2.5 rounded-md bg-bulb px-5 py-3 font-semibold text-night transition-colors hover:bg-bulb-deep"
                 >
                   <svg viewBox="0 0 20 20" className="size-4" fill="currentColor" aria-hidden="true">
@@ -111,20 +187,40 @@ const TitleDetails = ({ kind, title: t }) => {
         </div>
       </section>
 
-      {/* Story + billing block */}
-      <section className="mx-auto grid max-w-7xl gap-10 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] md:gap-16">
-        <div className="max-w-[68ch]">
-          <h2 className="font-display text-3xl font-extrabold">Story</h2>
-          <p className="mt-3 text-lg leading-relaxed text-paper/85">
-            {t.overview || "TMDB doesn't have a synopsis for this one yet."}
-          </p>
+      {/* Story, where to watch, keywords | crew billing block */}
+      <section className="mx-auto grid max-w-7xl gap-12 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1fr)_minmax(0,320px)] md:gap-16">
+        <div className="min-w-0 max-w-[68ch] space-y-12">
+          <div>
+            <h2 className={sectionTitle}>Story</h2>
+            <p className="mt-3 text-lg leading-relaxed text-paper/85">
+              {t.overview || "TMDB doesn't have a synopsis for this one yet."}
+            </p>
+          </div>
+
+          <WatchProviders key={t.id} data={t["watch/providers"]} />
+
+          {keywords.length ? (
+            <div>
+              <h2 className="text-sm text-muted">Keywords</h2>
+              <ul className="mt-2 flex flex-wrap gap-2">
+                {keywords.map((k) => (
+                  <li key={k.id} className="rounded bg-panel px-2.5 py-1 text-sm text-paper/80">
+                    {k.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </div>
-        {billing(kind, t).length ? (
-          <dl className="space-y-4 border-l-2 border-bulb pl-5">
-            {billing(kind, t).map(([label, list]) => (
+
+        {crew.length ? (
+          <dl className="space-y-4 self-start border-l-2 border-bulb pl-5">
+            {crew.map(([label, people], i) => (
               <div key={label}>
                 <dt className="text-sm text-muted">{label}</dt>
-                <dd className="font-display text-2xl font-bold leading-tight">{list.join(", ")}</dd>
+                <dd className={`font-display font-bold leading-tight ${i === 0 ? "text-3xl" : "text-xl"}`}>
+                  {people.join(", ")}
+                </dd>
               </div>
             ))}
           </dl>
@@ -134,7 +230,7 @@ const TitleDetails = ({ kind, title: t }) => {
       {/* Cast */}
       {cast.length ? (
         <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6">
-          <h2 className="font-display text-3xl font-extrabold">Cast</h2>
+          <h2 className={sectionTitle}>Cast</h2>
           <ul className="scroll-row -mx-4 mt-4 flex scroll-px-4 gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6">
             {cast.map((p) => (
               <li key={p.id} className="w-32 shrink-0 snap-start sm:w-36">
@@ -145,13 +241,67 @@ const TitleDetails = ({ kind, title: t }) => {
         </section>
       ) : null}
 
+      {/* Details */}
+      {details.length ? (
+        <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6" aria-labelledby="details">
+          <h2 id="details" className={sectionTitle}>
+            Details
+          </h2>
+          <dl className="mt-4 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-4">
+            {details.map(([label, value]) => (
+              <div key={label} className="min-w-0 bg-night px-4 py-4 sm:px-5">
+                <dt className="text-sm text-muted">{label}</dt>
+                <dd className="mt-0.5 text-paper">{value}</dd>
+              </div>
+            ))}
+            {/* Fill the last row (2 columns on phones, 4 on desktop) so no bare divider color shows. */}
+            {[0, 1, 2].map((i) => {
+              const pad2 = details.length % 2;
+              const pad4 = (4 - (details.length % 4)) % 4;
+              return (
+                <div
+                  key={`pad-${i}`}
+                  aria-hidden="true"
+                  className={`bg-night ${i < pad2 ? "block" : "hidden"} ${i < pad4 ? "lg:block" : "lg:hidden"}`}
+                />
+              );
+            })}
+          </dl>
+          <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+            {links(kind, t).map(([label, href]) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 font-medium text-paper underline decoration-line underline-offset-4 transition-colors hover:text-bulb hover:decoration-bulb"
+                >
+                  {label}
+                  <svg viewBox="0 0 20 20" className="size-3.5 text-muted" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <path d="M8 4H4v12h12v-4M11 3h6v6M17 3l-8 8" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span className="sr-only">(opens in a new tab)</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      <VideoRow videos={pickVideos(t.videos)} onPlay={(v) => setPlaying({ key: v.key, name: v.name })} />
+
+      <Reviews reviews={t.reviews} href={`https://www.themoviedb.org/${kind}/${t.id}/reviews`} />
+
       <div className="pb-20">
         <MediaRow title="More like this" items={(t.recommendations?.results ?? []).slice(0, 20)} kind={kind} />
       </div>
 
-      {video ? (
-        <TrailerModal videoKey={video} title={name} open={trailerOpen} onClose={() => setTrailerOpen(false)} />
-      ) : null}
+      <TrailerModal
+        videoKey={playing?.key}
+        title={playing?.name ?? name}
+        open={Boolean(playing)}
+        onClose={() => setPlaying(null)}
+      />
     </article>
   );
 };

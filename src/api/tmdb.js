@@ -1,7 +1,7 @@
 const API_BASE = "/api/tmdb";
 
-const APPEND_MOVIE = "release_dates,videos,credits,recommendations";
-const APPEND_TV = "content_ratings,videos,credits,recommendations";
+const APPEND_MOVIE = "release_dates,videos,credits,recommendations,keywords,watch/providers,reviews,external_ids";
+const APPEND_TV = "content_ratings,videos,credits,recommendations,keywords,watch/providers,reviews,external_ids";
 
 /**
  * Single entry point for TMDB requests.
